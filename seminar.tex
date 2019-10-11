@@ -9,39 +9,13 @@
 \date{\today}
 \maketitle
 
-\begin{abstract}
-My abstract that shortly explains the content of this paper and its conclusion.
-\end{abstract}
-
-\section{Introduction}
-Introduction to the topics of the paper and how they connect
-\section{Constraint Solvers}
-A small introduction what contraint solvers do, how they work and what their limits are.
-\subsection{Satisfiability Solvers}
-How SAT solvers work and what its limits are.
-I only want to describe the most relevant features without going into depth about all the possible optimizations that are currently used.
-As a source the paper of the SAT used in STP \cite{10.1007/978-3-540-24605-3_37} could be used. Additionally \cite{Gomes2008SatisfiabilityS} can be used as an alternative
-\subsection{Satisfiability Modulo Theories}
-How SMT solvers work in comparison to SAT solvers.
-Especially how the STP \cite{Ganesh:2007:DPB:1770351.1770421} (used in KLEE and other tools) works.
-Basically by transforming the input and solve the result of the transformation, if neccessary, with a SAT solver.
-\section{Symbolic Execution}
-Introduction to the topic of symbolic execution and its limits \cite{SurveySymExec-CSUR18} . Information about symbolic execution is also included in nearly all sources listed in the section concolic testing
-\section{Concolic Testing}
-What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
-What are the differences, advantages and disadvantages in relation to symbolic execution.
-\cite{Cadar:2006:EAG:1180405.1180445}
-\cite{Cadar:2008:KUA:1855741.1855756}
-\cite{Cadar:2013:SES:2408776.2408795}
-\cite{Godefroid:2005:DDA:1064978.1065036}
-\cite{Godefroid:2012:SWF:2090147.2094081}
-\section{Handwritten vs generated tests}
-In this section I want show where the generated tests have their (practical) limit and it's advantages/disadvantages in relation to handwritten tests.
-I want to show that the generated tests are (only) a complement to the handwritten tests, because they can cover many different paths. But they can only reason about certain programming errors. For example they are useful to detect faulty index access, pointer dereferences or calls of the wrong property in dynamically typed languages. Nevertheless they have no possibility to reason if the output of a program for a specific input is correct or not.
-\section{Conclusion}
-Summary and conclusion of this paper. 
-Automated testing is very successful in finding certain problems, but fails in other parts.
-The different type of tests are only a supplement and not a replacement.
+\input{abstract}
+\input{sections/introduction}
+\input{sections/contraint_solvers}
+\input{sections/symbolic_execution}
+\input{sections/concolic_testing}
+\input{sections/handwritten_vs_generated_tests}
+\input{sections/conclusion}
 \bibliographystyle{plain}
 \bibliography{seminarreferences}
 
