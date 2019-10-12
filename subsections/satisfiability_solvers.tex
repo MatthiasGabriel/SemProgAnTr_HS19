@@ -2,3 +2,10 @@
 How SAT solvers work and what its limits are.
 I only want to describe the most relevant features without going into depth about all the possible optimizations that are currently used.
 As a source the paper of the SAT used in STP \cite{10.1007/978-3-540-24605-3_37} could be used. Additionally \cite{Gomes2008SatisfiabilityS} can be used as an alternative
+
+A SAT solver basically tries to find a solution, assignment of all variables so that the formula is truee, to a specified boolean formula, but the formula has to meet certain criteria to be allowed as an input to a SAT solver. The most important criteria is that the formula has to be in the conjunctive normal form, in the further text only called CNF. In the following paragraph the rules of CNF will be explained together with some examples. The next paragraph shows that this restriction to CNF is not a big problem, because it's possible to transform any boolean formula into CNF.\\
+Each formula in CNF consists of any number of clauses which are in an conjuctive relation. Example: $clauseOne \land clauseTwo \land clauseThree$\\
+Each of the clauses consists of any number of literals which are in a disjunctive relation. Each literal can either be a variable or the negation of a variable. It's allowed to use a variable in multiple literals, but only one of the values \{True, False\} can be assigned to a variable, which will be used in the whole formula. Example: clauseOne = $A \lor B$ clauseTwo = $B \lor \lnot C$ clauseThree = $C$\\
+The whole boolean formula would therefore be $A \lor B \land B \lor \lnot C \land C$\\
+If a boolean formula is not in the CNF it's neccessary to convert it before entering into the SAT solver. For example the boolean formula $\lnot$(A $\lor$ B) $\lor$ C can be converted into ($\lnot$A $\lor$ C) $\land$ ($\lnot$ B $\lor$ C)\\
+There exist different kind of special clauses: empty clause, unit clause, binary clause
