@@ -2,6 +2,32 @@
 
 \usepackage{graphicx}
 
+\usepackage{color}
+\usepackage{listings}
+\usepackage{caption}
+
+\newcounter{nalg}[section]
+\renewcommand{\thenalg}{\thesection .\arabic{nalg}}
+\DeclareCaptionLabelFormat{algocaption}{Algorithm \thenalg}
+\lstnewenvironment{algorithm}[1][]
+{   
+    \refstepcounter{nalg}
+    \captionsetup{labelformat=algocaption,labelsep=colon}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
+
 \begin{document}
 
 \title{Concolic testing: An overview of the used techniques and its limits}

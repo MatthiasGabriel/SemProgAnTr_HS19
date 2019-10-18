@@ -3,7 +3,11 @@ How SAT solvers work and what its limits are.
 I only want to describe the most relevant features without going into depth about all the possible optimizations that are currently used.
 As a source the paper of the SAT used in STP \cite{10.1007/978-3-540-24605-3_37} could be used. Additionally \cite{Gomes2008SatisfiabilityS} can be used as an alternative
 
-A SAT solver basically tries to find a solution, assignment of all variables so that the formula is truee, to a specified boolean formula, but the formula has to meet certain criteria to be allowed as an input to a SAT solver. The most important criteria is that the formula has to be in the conjunctive normal form, in the further text only called CNF. In the following paragraph the rules of CNF will be explained together with some examples. The next paragraph shows that this restriction to CNF is not a big problem, because it's possible to transform any boolean formula into CNF\cite{Jackson:2004:CFC:2103144.2103160}.\\
+A SAT solver basically tries to find a solution, an assignment of all variables so that the formula is true, to a specified boolean formula. All modern SAT Solvers return a specific assignment if its possible and otherwise will specify that the formula is not satisfiable.
+Example: Take the following formula as an input $A \land \lnot B$ there's only one variable assignment where the formula evaluates to true, namely A = true and B = false.
+Unsatisfiable Example: $A \land \lnot B \land (\lnot A \lor B)$ there's no possibility how to assign boolean values to A and B which lets the formula evaluate to true, therefore its unsatifable.
+To simplify the task the formula has to meet certain criteria to be allowed as an input to a SAT solver. The most important criteria is that the formula has to be in the conjunctive normal form, in the further text only called CNF. In the following paragraph the rules of CNF will be explained together with some examples. The next paragraph shows that this restriction to CNF is not a big problem, because it's possible to transform any boolean formula into CNF\cite{Jackson:2004:CFC:2103144.2103160}.\\
+\subsubsection{CNF}
 In CNF there exist variables like $A$ or $B$ which can either set to true or false.
 This variables are the used in so called literals. Each literal consists of exactly one variable or its negation. It's allowed to use a variable in multiple literals, but only one of the values \{true, false\} can be assigned to a variable, which will be used in the whole formula.\\
 Example: $A$ or $\lnot B$\\
@@ -16,3 +20,87 @@ There exist different kind of special clauses: empty clause, unit clause, binary
 The empty clause contains no literal and is in litarature denotes with different symbols. In this publication we use an uppercase lambda $\Lambda$ as suggested by Gomes et al \cite{Gomes2008SatisfiabilityS}
 The empty clause always evaluates to false, because there is no possibility to assign a variable which lets the clause evaluate to true.
 The unit clause contains exactly one literal. The literal can contain either a variable or its negation. E.g. $A$ $\lnot A$ are both unit clauses. The unit clause is a special case, because we can compute the variable used in the unit clause. If a CNF formula should evaluate to true and contains a unit clause we know that the unit clause must also evaluate to true. Therefore in our example clause  $A$ $A$ has to be true and in the other example $\lnot A$ $A$ has to be false. This property will be heavely used by the SAT solver.
+\subsubsection{DPLL}
+There are many different methods how a SAT Formula can be solved. The most simplistic approach would be to just bruteforce the formula and try to evaluate the formula for every possible combination of variables. This works well for a small number of variables but does not scale, because the computation time increases exponentially. In this chapter I will present you the method of the DPLL Procedure, which is the basis for many of the currently used algorithms.
+The predecessor of this method was first presented in 1960 by Davis and Putnam and in 1962 improved by Davis, Logemann and Loveland, hence the name DPLL which consists of the initials of the inventors.
+Even though the worst case still requires exponential time, in usual use cases these algorithms provide massive computational benefits. I will analyse the recursive version of the algorithm, because its much easier to understand some of the key ideas. Note that the algorithm also exists in iterative versions, which are able to reduce the memory usage.
+I represented the algorithm with 3 parts of pseudo code algorithms \ref{algDPLLRecursive}, \ref{algUnitProgagate} and \ref{algIsUnitClause} of which the first two are essential and the third is just added for clarity.
+The algorithm DPLLRecursive shows the general structure of the approach, but the algorithm UnitPropagate actually is similiar important.
+First the unitpropagation is executed, after that its checked if either of the base cases is reached. There are two base cases: Either the formula contains no more clauses which results in a satisfied formula (as shown in lines 9-10) or the formula contains an empty clause which results in UNSAT (as shown in lines 7-8).
+The next step(line 11), also called branching step, selects the literal $l$, that should be eliminated in the next recursion.
+The last step of the DPLLRecursive is to call itself twice with a new input. In one case a new unit clause with the selected literal $l$ is added to the formula(line 12), in the other case the negation of the literal is added(line 15).\\
+Now I will shed some light on the second part of the algorithm, called UnitPropagte, which is called as the first step.
+This part algorithm will try to assign values to all variables, which can be determined. The easiest case where we can determine a variable if there exists a unit clause with a literal that contains this value. Because CNF defines that every clause has to be true by itself, we therefore know that this clause $x$ has to be true as well.\\ Example: Suppose we have the unit clause $(A)$ which is part of the formula we can assign the value true to the variable A. Suppose we have the unit clause $(\lnot A)$ we can assign the value false to the variable A.\\
+After we assigned the variable we can update our formula to reflect the changes. As a first step we remove all clauses where the same literal is contained(lines 8-9), as this clauses are evaluated to true. The second step is to remove all occurences of the negated literal from all clauses(lines 10-11). We can do this because we know the negated literal will always evaluate to false and an $\lor false$ combination is redundant.
+This reduction can result in new unit clauses, which then will be propagated, until no more feasable clauses can be found or an empy clause is constructed.\\
+Example for UnitPropagation: 
+Assume the formula $F$ is assigned $(A \lor B ) \land (B \lor \lnot C) \land (C)$ and there are currently no variables defined, therefore $\rho$ is empty\\
+TODO change into graphic
+$UnitPropagate(\{\{(A,B\}, \{B, \lnot C\},\{C\}\}, \{\})$\\
+First iteration of while at line 6: \\
+$xClause \gets \{C\}$\\
+$xLiteral \gets C$\\
+First iteration of while at line 8:\\
+$yClause \gets \{C\}$\\
+$F \gets \{\{(A,B\}, \{B, \lnot C\}\}$\\
+First iteration of while at line 10:\\
+$zClause \gets \{B, \lnot C\}$ \\
+$newZClause \gets \{B\}$\\
+$F \gets \{\{(A,B\}, \{B\}\}$ \\
+$\rho \gets \{C\}$\\
+Second iteration of while at line 6: \\
+$xClause \gets \{B\}$\\
+$xLiteral \gets B$\\
+First iteration of while at line 8:\\
+$yClause \gets \{A,B\}$\\
+$F \gets \{\{B\}$\\
+Second iteration of while at line 8:\\
+$yClause \gets \{B\}$\\
+$F \gets \{\}$\\
+$\rho \gets \{B, C\}$\\
+return $\{\}, \{B, C\}$
+
+\begin{algorithm}[caption={DPLLRecursive}, label={algDPLLRecursive}]
+ input: $F$: boolean formula in CNF-Form
+	$\rho$: assignment of variables
+ output: assignment that satisfies F or 
+	UNSAT if no assignment is possible
+ begin
+   $(F, \rho)$  $\gets$ UnitPropagate
+   if $\Lambda \in F$
+	return UNSAT
+   if $F = \emptyset$
+	return $\rho$
+   $l \gets$ a literal not assigned by $\rho$
+   $result \gets$ DPLLRecursive($F \cup \{l\}, \rho$)
+   if $result \neq UNSAT$
+	return result
+   return DPLLRecursive($F \cup \{\lnot l\}, \rho$)
+\end{algorithm}
+
+\begin{algorithm}[caption={UnitPropagate}, label={algUnitProgagate}]
+ input: $F$: boolean formula in CNF-Form
+	$\rho$: assignment of variables
+ output: $F$: updated boolean formula in CNF-Form
+	$\rho$:updated assignment of variables
+ begin
+   while $\Lambda \notin F$ and $\exists xClause \in F: IsUnitClause(xClause)$
+	$\exists! xLiteral \in xClause$
+	while $\exists yClause \in F: xLiteral \in yClause$
+		$F \gets F \setminus \{yClause\}$     
+	while $\exists zClause \in F: \lnot xLiteral \in zClause$
+		$newZClause \gets zClause \setminus \{\lnot xLiteral\}$
+		$F \gets (F \setminus zClause) \cup newZClause$
+	$\rho \gets \rho \cup \{xLiteral\}$
+   return $(F, \rho)$
+ end
+\end{algorithm}
+\begin{algorithm}[caption={IsUnitClause}, label={algIsUnitClause}]
+ input: $C$: CNF clause
+ output: true if the clause only contains one element
+	false if the clause contains zero 
+		or multiple elements
+ begin
+   return $|C| = 1$
+ end
+\end{algorithm}
