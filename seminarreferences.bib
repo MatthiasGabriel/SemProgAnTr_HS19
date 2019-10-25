@@ -245,3 +245,23 @@ isbn="978-3-540-24605-3"
  publisher = {Springer-Verlag},
  address = {Berlin, Heidelberg},
 } 
+@InProceedings{10.1007/978-3-540-71209-1_28,
+author="Bryant, Randal E.
+and Kroening, Daniel
+and Ouaknine, Jo{\"e}l
+and Seshia, Sanjit A.
+and Strichman, Ofer
+and Brady, Bryan",
+editor="Grumberg, Orna
+and Huth, Michael",
+title="Deciding Bit-Vector Arithmetic with Abstraction",
+booktitle="Tools and Algorithms for the Construction and Analysis of Systems",
+year="2007",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="358--372",
+abstract="We present a new decision procedure for finite-precision bit-vector arithmetic with arbitrary bit-vector operations. Our procedure alternates between generating under- and over-approximations of the original bit-vector formula. An under-approximation is obtained by a translation to propositional logic in which some bit-vector variables are encoded with fewer Boolean variables than their width. If the under-approximation is unsatisfiable, we use the unsatisfiable core to derive an over-approximation based on the subset of predicates that participated in the proof of unsatisfiability. If this over-approximation is satisfiable, the satisfying assignment guides the refinement of the previous under-approximation by increasing, for some bit-vector variables, the number of Boolean variables that encode them. We present experimental results that suggest that this abstraction-based approach can be considerably more efficient than directly invoking the SAT solver on the original formula as well as other competing decision procedures.",
+isbn="978-3-540-71209-1"
+}
+
+

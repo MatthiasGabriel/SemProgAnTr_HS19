@@ -6,6 +6,7 @@
 \usepackage{listings}
 \usepackage{caption}
 
+%%%%%% OWN Pseudocode style
 \newcounter{nalg}[section]
 \renewcommand{\thenalg}{\thesection .\arabic{nalg}}
 \DeclareCaptionLabelFormat{algocaption}{Algorithm \thenalg}
@@ -27,6 +28,22 @@
     }
 }
 {}
+
+\usepackage{amsmath}
+%%%%%%% Make it possible to write over a leftrightarrow
+
+\makeatletter
+\newcommand\xleftrightarrow[2][]{%
+  \ext@arrow 9999{\longleftrightarrowfill@}{#1}{#2}}
+\newcommand\longleftrightarrowfill@{%
+  \arrowfill@\leftarrow\relbar\rightarrow}
+\makeatother
+
+%%%%%% SPECIFY own MOD
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+
+%%%%%%%%%%-----REFERENCES
+\usepackage[hidelinks]{hyperref}	% Makes references clickable
 
 \begin{document}
 
