@@ -1,4 +1,5 @@
 \subsection{Satisfiability Solvers}
+TODO cleanup and cite properly
 How SAT solvers work and what its limits are.
 I only want to describe the most relevant features without going into depth about all the possible optimizations that are currently used.
 As a source the paper of the SAT used in STP \cite{10.1007/978-3-540-24605-3_37} could be used. Additionally \cite{Gomes2008SatisfiabilityS} can be used as an alternative
@@ -28,7 +29,9 @@ I represented the algorithm with 3 parts of pseudo code algorithms \ref{algDPLLR
 The algorithm DPLLRecursive shows the general structure of the approach, but the algorithm UnitPropagate actually is similiar important.
 First the unitpropagation is executed, after that its checked if either of the base cases is reached. There are two base cases: Either the formula contains no more clauses which results in a satisfied formula (as shown in lines 9-10) or the formula contains an empty clause which results in UNSAT (as shown in lines 7-8).
 The next step(line 11), also called branching step, selects the literal $l$, that should be eliminated in the next recursion.
-The last step of the DPLLRecursive is to call itself twice with a new input. In one case a new unit clause with the selected literal $l$ is added to the formula(line 12), in the other case the negation of the literal is added(line 15).\\
+The last step of the DPLLRecursive is to call itself twice with a new input. In one case a new unit clause with the selected literal $l$ is added to the formula(line 12), in the other case the negation of the literal is added(line 15).
+The step when the first recusion ends in UNSAT and returns to the base is called backtracking and is in the recursive version very simply, because there's literaly nothing to be done.\\
+
 Now I will shed some light on the second part of the algorithm, called UnitPropagte, which is called as the first step.
 This part algorithm will try to assign values to all variables, which can be determined. The easiest case where we can determine a variable if there exists a unit clause with a literal that contains this value. Because CNF defines that every clause has to be true by itself, we therefore know that this clause $x$ has to be true as well.\\ Example: Suppose we have the unit clause $(A)$ which is part of the formula we can assign the value true to the variable A. Suppose we have the unit clause $(\lnot A)$ we can assign the value false to the variable A.\\
 After we assigned the variable we can update our formula to reflect the changes. As a first step we remove all clauses where the same literal is contained(lines 8-9), as this clauses are evaluated to true. The second step is to remove all occurences of the negated literal from all clauses(lines 10-11). We can do this because we know the negated literal will always evaluate to false and an $\lor false$ combination is redundant.
@@ -59,6 +62,8 @@ $yClause \gets \{B\}$\\
 $F \gets \{\}$\\
 $\rho \gets \{B, C\}$\\
 return $\{\}, \{B, C\}$
+
+
 
 \begin{algorithm}[caption={DPLLRecursive}, label={algDPLLRecursive}]
  input: $F$: boolean formula in CNF-Form
@@ -104,3 +109,6 @@ return $\{\}, \{B, C\}$
    return $|C| = 1$
  end
 \end{algorithm}
+
+\subsubsection{Improvements of todays SAT solvers}
+The key differences between the original DPLL Algorithm and currently developed SAT solvers lie in the improvement of either the branching selection of the literal, the backtracking after a branch ends in an UNSAT state and some improvements to the unit propagation.
