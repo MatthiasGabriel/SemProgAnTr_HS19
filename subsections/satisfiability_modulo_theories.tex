@@ -1,11 +1,13 @@
 \subsection{Satisfiability Modulo Theories Solvers}
-TODO cleanup
-How SMT solvers work in comparison to SAT solvers.
-Especially how the STP \cite{Ganesh:2007:DPB:1770351.1770421} (used in KLEE and other tools) works.
-Basically by transforming the input and solve the result of the transformation, if neccessary, with a SAT solver.
-
-In relation to the Satisfiability Solvers, the Satisfiablity Modulo Theories solvers, short SMT solvers, take a step back. Because it is often time consuming to formulate your domain specific problem as a boolean formula and transform it into CNF. In this section an overview over how STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, works is given.
-In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. Which in practise allows us to reason about integers, because integers are principally bit vectors and also some datastructures like lists and arrays. STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-freee first order logic problem, until it can be converted into conjunctive normal form and therefore be solved by a SAT solver, which allows it to benefit from the heavely engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the SAT solver, which often leads to problems with the SAT specific optimizations.The architecture of STP is visualized in the figure \ref{fig:spt_architecture}.
+In relation to the Satisfiability Solvers, the Satisfiablity Modulo Theories solvers, short SMT solvers, take a step back. Because it is often time consuming to formulate your domain specific problem as a boolean formula and transform it into CNF. In this section an overview over how STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, works is given.\\
+In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. Which in practise allows us to reason about various data types such as integers, integers are principally bit vectors and also some datastructures like lists and arrays.\\
+As an input STP allows the following operations, which can be grouped in the following way:\\
+\begin{itemize}
+\item \textbf{logical and boolean} Constant Values TRUE and FALSE, variables with a boolean value, any boolean operator\footnote{such as $\lor$,$\land$, $\Rightarrow$, etc}, bitwise boolean operators \\
+\item \textbf{mathematic operations} Left and right shifts, addition, multiplication, unary minus, division, modulo, relational operators\\
+\item \textbf{others} Array read, array write,  extraction of bit-vectors\footnote{$x[i:j]$ is the extraction of the bytes between $i$ and $j$ of $x$}, concatenation of bit-vectors\footnote{The concatenation of two bit-vectors $x_{[n]}$ and $y_{[m]}$ is expressed as $x \circ y$ and returns a new vector $z_{[m+n]}$ of length $m+n$}\\
+\end{itemize}
+STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-freee first order logic problem, until it can be converted into conjunctive normal form and therefore be solved by a SAT solver, which allows it to benefit from the heavely engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the SAT solver, which often leads to problems with the SAT specific optimizations.The architecture of STP is visualized in the figure \ref{fig:spt_architecture}.
 TODO add more content about the general working of STP, especially the array refinement
 To reduce the size of a problem it applies optimations specific to bit-vector and array theory.
 \begin{figure}
@@ -49,7 +51,8 @@ $$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2} \xleftrightarrow{\text{isolate y[1:0]}}
 $$y[1 : 0] = -2z[1 : 0] -1 \Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
 $$y[1 : 0] = 2z[1 : 0] +3 \Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
 After we isolated $y[1 : 0] $ we can substitute each $y[1 : 0] $ in the original equality system with $2z[1:0]+3$
-$$2(\underbrace{2z[1:0]+3}_{y[1:0]}) + 3z[1 : 0] = 0\Mod{2^2}  \Leftrightarrow 3z[1:0] + 2 = 0 \Mod{2^2}$$
+$$2(\underbrace{2z[1:0]+3}_{y[1:0]}) + 3z[1 : 0] = 0\Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
+$$3z[1:0] + 2 = 0 \Mod{2^2}$$
 In the last iteration we can isolate $z[1:0]$ because the $gcd(3,2^2) = 1$. The inverse of 3 in $\mod{2^2}$ is 3.
 $$3z[1:0] + 2 = 0 \Mod{2^2} \xleftrightarrow{\text{isolate 3z[1:0]}}$$
 $$3z[1:0]=-2  \Mod{2^2}   \xleftrightarrow{\text{normalize to mod4}}$$
@@ -57,8 +60,12 @@ $$3z[1:0]=2  \Mod{2^2}   \xleftrightarrow{\text{multiple with 3}}$$
 $$z[1:0]=6  \Mod{4}  \xleftrightarrow{\text{normalize to mod4}}$$
 $$z[1:0]=2  \Mod{4}$$
 Because we got a solution we can conclude that the original equation system is satisfiable.
-The original system can be transformed into $$x = 4y + 6z \land y[1 : 0] = 2z[1 : 0] + 3 \land z[1 : 0] = 2$$ and forwarded to the SAT solver.
+The original system can be transformed into $$(x = 4y + 6z) \land (y[1 : 0] = 2z[1 : 0] + 3) \land (z[1 : 0] = 2)$$ and forwarded to the SAT solver.
 
+TODO cleanup
+How SMT solvers work in comparison to SAT solvers.
+Especially how the STP \cite{Ganesh:2007:DPB:1770351.1770421} (used in KLEE and other tools) works.
+Basically by transforming the input and solve the result of the transformation, if neccessary, with a SAT solver.
 Description of Bit-Vector Arithmentic used in the on-the-fly solver\cite{10.1007/978-3-540-71209-1_28}
 STP uses many different algorithms to optimize the formula. In the next section two of these optimizations are described, as an example.
 on-the-fly solver for mod-2n linear arithmetic

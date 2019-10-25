@@ -33,10 +33,7 @@
 %%%%%%% Make it possible to write over a leftrightarrow
 
 \makeatletter
-\newcommand\xleftrightarrow[2][]{%
-  \ext@arrow 9999{\longleftrightarrowfill@}{#1}{#2}}
-\newcommand\longleftrightarrowfill@{%
-  \arrowfill@\leftarrow\relbar\rightarrow}
+\newcommand{\xleftrightarrow}[2][]{\ext@arrow 0099\Leftrightarrowfill@{#1}{#2}}
 \makeatother
 
 %%%%%% SPECIFY own MOD
