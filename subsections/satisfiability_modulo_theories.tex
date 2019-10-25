@@ -5,8 +5,15 @@ Especially how the STP \cite{Ganesh:2007:DPB:1770351.1770421} (used in KLEE and 
 Basically by transforming the input and solve the result of the transformation, if neccessary, with a SAT solver.
 
 In relation to the Satisfiability Solvers, the Satisfiablity Modulo Theories solvers, short SMT solvers, take a step back. Because it is often time consuming to formulate your domain specific problem as a boolean formula and transform it into CNF. In this section an overview over how STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, works is given.
-In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. Which in practise this allows us to reason about integers, because integers are principally bit vectors and also some datastructures like lists and arrays. STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-freee first order logic problem, until it can be converted into conjunctive normal form and therefore be solved by a SAT solver, which allows it to benefit from the heavely engineered and therefore very fast SAT solvers.
+In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. Which in practise allows us to reason about integers, because integers are principally bit vectors and also some datastructures like lists and arrays. STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-freee first order logic problem, until it can be converted into conjunctive normal form and therefore be solved by a SAT solver, which allows it to benefit from the heavely engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the SAT solver, which often leads to problems with the SAT specific optimizations.The architecture of STP is visualized in the figure \ref{fig:spt_architecture}.
+TODO add more content about the general working of STP, especially the array refinement
 To reduce the size of a problem it applies optimations specific to bit-vector and array theory.
+\begin{figure}
+\includegraphics[width=\linewidth]{SPT_architecture}
+\centering
+\caption{SPT Architecture}
+\label{fig:spt_architecture}
+\end{figure}
 In the original paper\cite{Ganesh:2007:DPB:1770351.1770421} there are two of these optimizations discussed. The first optimization is an "on-the-fly solver for mod-$2^n$ linear arithmetic", which is embedded in STP. 
 When reasoning about fixed length bit-vector arithmetic this part of the program tries to reason about parts of the bit-vector equality system.
 The idea is to use the property of a such a vector that you can always calculate in $\mod{2^b}$ where is b is the length of the bit-vector.
