@@ -31,11 +31,11 @@ $$2x+4y+2z=0 \Mod{2^3}$$
 If we know that the $gcd$ of two numbers is $a$ and $m$ is 1, $a$ has per definition a multiplicative inverse in mod $m$. In this case we are interested in $m=2^b$. This property is necessary, because we need to isolate one of the variables and therefore multiply with the inverse\footnote{This is neccessary because division in modular arithmetic is not defined and replaced with the multiplication of the inverse}.
 The algorithm chooses the first equation and tries to find an $a_i$ where $gcd(a_i,2^3) = 1$ is true. In our example it finds $a_1$ which has the value $3$, therefore we are able to isolate x in the first equation.
 The first step is to multiple with the multiplicative inverse of 3 in$\mod{2^3}$ which is also 3.
-$$3x+4y+2z = 0 \Mod{2^3} \xleftrightarrow{\text{isolate 3x}}$$
-$$3x=-4y-2z  \Mod{2^3}   \xleftrightarrow{\text{normalize to mod8}}$$
-$$3x=4y+6z  \Mod{2^3}  \xleftrightarrow{\text{multiple with 3}}$$
-$$x=12y+18z \Mod{2^3}  \xleftrightarrow{\text{normalize to mod8}}$$
-$$x=4y+2z \Mod{2^3} $$
+$$3x+4y+2z = 0 \Mod{2^3} \mid \text{isolate 3x}$$
+$$\Leftrightarrow 3x=-4y-2z  \Mod{2^3}  \mid \text{normalize to mod8}$$
+$$\Leftrightarrow 3x=4y+6z  \Mod{2^3}  \mid \text{multiple with 3}$$
+$$\Leftrightarrow x=12y+18z \Mod{2^3}  \mid \text{normalize to mod8}$$
+$$\Leftrightarrow x=4y+2z \Mod{2^3} $$
 After we isolated $x$ we can substitute each $x$ in the original equality system with $4y+2z$
 $$2(\underbrace{4y+2z}_{x})+2y+2=0 \Mod{2^3} \Leftrightarrow 2y + 4z + 2 = 0\Mod{2^3} $$
 $$2(\underbrace{4y+2z}_{x})+ 4y + 2z = 0 \Mod{2^3} \Leftrightarrow 4y + 6z = 0\Mod{2^3} $$
@@ -47,18 +47,18 @@ The new variables are named $y[1:0]$ and $z[1:0]$ to signal that they represent 
 $$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2}$$
 $$2y[1 : 0] + 3z[1 : 0] = 0\Mod{2^2}$$
 Now the first step of isolation a variable $x_i$ with a coefficient $gcd(a_i, 2^b)=1$ is repeated.
-$$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2} \xleftrightarrow{\text{isolate y[1:0]}}$$
-$$y[1 : 0] = -2z[1 : 0] -1 \Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
-$$y[1 : 0] = 2z[1 : 0] +3 \Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
+$$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2}\mid \text{isolate y[1:0]}$$
+$$\Leftrightarrow y[1 : 0] = -2z[1 : 0] -1 \Mod{2^2} \mid \text{normalize to mod4}$$
+$$\Leftrightarrow y[1 : 0] = 2z[1 : 0] +3 \Mod{2^2}$$
 After we isolated $y[1 : 0] $ we can substitute each $y[1 : 0] $ in the original equality system with $2z[1:0]+3$
-$$2(\underbrace{2z[1:0]+3}_{y[1:0]}) + 3z[1 : 0] = 0\Mod{2^2} \xleftrightarrow{\text{normalize to mod4}}$$
-$$3z[1:0] + 2 = 0 \Mod{2^2}$$
+$$2(\underbrace{2z[1:0]+3}_{y[1:0]}) + 3z[1 : 0] = 0\Mod{2^2} \mid \text{normalize to mod4}$$
+$$\Leftrightarrow 3z[1:0] + 2 = 0 \Mod{2^2}$$
 In the last iteration we can isolate $z[1:0]$ because the $gcd(3,2^2) = 1$. The inverse of 3 in $\mod{2^2}$ is 3.
-$$3z[1:0] + 2 = 0 \Mod{2^2} \xleftrightarrow{\text{isolate 3z[1:0]}}$$
-$$3z[1:0]=-2  \Mod{2^2}   \xleftrightarrow{\text{normalize to mod4}}$$
-$$3z[1:0]=2  \Mod{2^2}   \xleftrightarrow{\text{multiple with 3}}$$
-$$z[1:0]=6  \Mod{4}  \xleftrightarrow{\text{normalize to mod4}}$$
-$$z[1:0]=2  \Mod{4}$$
+$$3z[1:0] + 2 = 0 \Mod{2^2} \mid \text{isolate 3z[1:0]}$$
+$$\Leftrightarrow 3z[1:0]=-2  \Mod{2^2}   \mid \text{normalize to mod4}$$
+$$\Leftrightarrow 3z[1:0]=2  \Mod{2^2}   \mid \text{multiple with 3}$$
+$$\Leftrightarrow z[1:0]=6  \Mod{4}  \mid \text{normalize to mod4}$$
+$$\Leftrightarrow z[1:0]=2  \Mod{4}$$
 Because we got a solution we can conclude that the original equation system is satisfiable.
 The original system can be transformed into $$(x = 4y + 6z) \land (y[1 : 0] = 2z[1 : 0] + 3) \land (z[1 : 0] = 2)$$ and forwarded to the SAT solver.
 
