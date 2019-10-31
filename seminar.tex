@@ -1,10 +1,13 @@
-\documentclass[journal]{IEEEtran}
+\documentclass[twocolumn]{article}
 
 \usepackage{graphicx}
 
 \usepackage{color}
 \usepackage{listings}
 \usepackage{caption}
+\usepackage[affil-it]{authblk} % Affilation
+
+
 
 %%%%%% OWN Pseudocode style
 \newcounter{nalg}[section]
@@ -44,11 +47,15 @@
 
 \graphicspath{{images/}}
 
-\begin{document}
+
 
 \title{Concolic testing: An overview of the used techniques and its limits}
-\author{Matthias Gabriel\\\textit{University of Applied Sciences Rapperswil}\\[1cm]{\small Supervisor: \textit{Prof. Peter Sommerlad}\\Seminar HS2019}}
+\author{Matthias Gabriel}
+\affil{University of Applied Sciences Rapperswil\\Supervisor Prof. Peter Sommerlad\\Seminar HS2019}
 \date{\today}
+
+
+\begin{document}
 \maketitle
 
 \input{abstract}
