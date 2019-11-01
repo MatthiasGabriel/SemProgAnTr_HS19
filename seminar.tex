@@ -125,40 +125,50 @@
                   \nodepart{second}
             $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = true$
         }
+        child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+		\textbf{Line 11: $a = a * -1$}
+	                  \nodepart{second}
+	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
+	        }
+        edge from parent
+            node[kant, below, pos=.6] {$a < 0$}}
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+	\textbf{Line 3: if($b > 0$)}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
+        }
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+	\textbf{Line 5: $a = a + x$}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
+        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+		\textbf{Line 7: if($b<0$)}
+	                  \nodepart{second}
+	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
+	        }
+	        edge from parent
+	            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$b > 0$}}	
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+	\textbf{Line 7: if($b < 0$)}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
+        }
+        edge from parent
+            node[kant, below, pos=.6] {$b \leq 0$}}	
+        edge from parent
+            node[kant, below, pos=.6] {$a \geq 0$}}	
         edge from parent
             node[kant, below, pos=.6] {}
-    }
-    %Upper part, lv1
-    child {
-        node[punkt, text width=6em] {Country~\A}
-        %child 1
-        child {
-            node [punkt,rectangle split, rectangle split,
-            rectangle split parts=3] {
-                \textbf{Scenario  2}
-                \nodepart{second}
-                $\text{Country \B}\colon s\bar{Q}+2\alpha\Delta E -sc$
-                \nodepart{third}
-                $\text{Country \A}\colon\pa{1-s}\bar{Q}-\alpha\Delta E -
-                \pa{1-s}c$
-            }
-            edge from parent
-                node[below, kant,  pos=.6] {Unchanged parity}
-        }
-        %child 2
-        child {
-            node [punkt, rectangle split, rectangle split parts=3]{
-                \textbf{Scenario 3}
-                \nodepart{second}
-                $\text{Country \B}\colon s\bar{Q}-2sc$
-                \nodepart{third}
-                $\text{Country \A}\colon\pa{1-s}\bar{Q}-2\pa{1-s}c$
-            }
-            edge from parent
-                node[kant, above] {Devalues}}
-            edge from parent{
-                node[kant, above] {Devalues}}
-    };
+    } ;
+
 \end{tikzpicture}
 \end{adjustbox}
 \end{figure*}
