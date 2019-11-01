@@ -58,6 +58,9 @@
 }
 {}
 
+
+\usepackage{tikz}
+\usepackage{adjustbox}
 \usepackage{amsmath}
 %%%%%%% Make it possible to write over a leftrightarrow
 
@@ -74,6 +77,16 @@
 \graphicspath{{images/}}
 
 
+\usetikzlibrary{shapes}
+\usepackage{xspace}
+\newcommand{\A}{\ensuremath{\mathcal{A}}\xspace}
+\newcommand{\B}{\ensuremath{\mathcal{B}}\xspace}
+\newcommand\pa[1]{\ensuremath{\left(#1\right)}}
+
+%%%%%%%%%%-----Text Highlightning
+\usepackage{soul}
+\usepackage{xcolor}
+\newcommand{\highlight}[1]{\colorbox{lightgray}{$\displaystyle #1$}}
 
 \title{Concolic testing: An overview of the used techniques and its limits}
 \author{Matthias Gabriel}
@@ -84,6 +97,71 @@
 \begin{document}
 \maketitle
 
+\begin {figure*}%[!hbtp]
+\begin{adjustbox}{width=\textwidth}
+\begin{tikzpicture}[
+    grow=down,
+    level 1/.style={sibling distance=2cm,level distance=1cm, scale=3},
+    level 2/.style={sibling distance=2cm, level distance=1cm, scale=3},
+    edge from parent/.style={very thick,draw=blue!40!black!60,
+        shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
+    kant/.style={text width=2cm, text centered, sloped},
+    every node/.style={text ragged, inner sep=2mm},
+    punkt/.style={rectangle, rounded corners, shade, top color=white,
+    bottom color=blue!50!black!20, draw=blue!40!black!60, very
+    thick }
+    ]
+
+\node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+	\textbf{Line 1: x = 1}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,\highlight{x\gets 1}\}$, $\pi = true$
+}
+    %Lower part lv1
+    child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+	\textbf{Line 2: if($a \geq	0$)}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = true$
+        }
+        edge from parent
+            node[kant, below, pos=.6] {}
+    }
+    %Upper part, lv1
+    child {
+        node[punkt, text width=6em] {Country~\A}
+        %child 1
+        child {
+            node [punkt,rectangle split, rectangle split,
+            rectangle split parts=3] {
+                \textbf{Scenario  2}
+                \nodepart{second}
+                $\text{Country \B}\colon s\bar{Q}+2\alpha\Delta E -sc$
+                \nodepart{third}
+                $\text{Country \A}\colon\pa{1-s}\bar{Q}-\alpha\Delta E -
+                \pa{1-s}c$
+            }
+            edge from parent
+                node[below, kant,  pos=.6] {Unchanged parity}
+        }
+        %child 2
+        child {
+            node [punkt, rectangle split, rectangle split parts=3]{
+                \textbf{Scenario 3}
+                \nodepart{second}
+                $\text{Country \B}\colon s\bar{Q}-2sc$
+                \nodepart{third}
+                $\text{Country \A}\colon\pa{1-s}\bar{Q}-2\pa{1-s}c$
+            }
+            edge from parent
+                node[kant, above] {Devalues}}
+            edge from parent{
+                node[kant, above] {Devalues}}
+    };
+\end{tikzpicture}
+\end{adjustbox}
+\end{figure*}
 \input{abstract}
 \input{sections/introduction}
 \input{sections/contraint_solvers}

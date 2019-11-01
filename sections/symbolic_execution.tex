@@ -19,7 +19,6 @@ Consider for example that a statement $if (a > 0)$ is the first statement of you
 $$\pi_{true} = \alpha_a = 0$$
 $$\pi_{false} = \alpha_a <= 0$$
 
-
 Directly after the branching the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the pogram does not need further research, as it can no be reached.
 
 \begin{codesnippet}[caption={Simple Symbolic Execution Example}, label={codeSnippetSymbolicExecution}]
@@ -39,6 +38,24 @@ int calculateMagicNumber(int a, int b){
   return a * b
 }
 \end{codesnippet}
+
+\begin {figure*}%[!hbtp]
+\begin{adjustbox}{width=\textwidth}
+\begin{tikzpicture}[sibling distance=10em,
+  every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20}]]
+  \node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$\\$\pi = true$}
+    child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = true$}
+	child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = a>=0$}}
+	child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = a<0$}
+		child { node {$\sigma = \{a\gets \alpha_a*-1 , b \gets \alpha_b, x \gets 1\}$\\$\pi = a<0$}}
+}}
+
+;
+\end{tikzpicture}
+\end{adjustbox}
+\end{figure*}
 
 
 
