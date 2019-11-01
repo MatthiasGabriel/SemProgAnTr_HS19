@@ -1,6 +1,6 @@
 \subsection{Satisfiability Modulo Theories Solvers}
 In relation to the Satisfiability Solvers, the Satisfiablity Modulo Theories solvers, short SMT solvers, operate on a higher logical level. Because it is often time consuming to formulate your domain specific problem as a boolean formula and transform it into CNF a new class of solvers was defined which tries to overcome this restriction. In this section an overview over how STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, works is given.
-
+\todo{maybe add/research something more about first order theories}
 In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. Which in practise allows us to reason about various data types such as integers, integers are principally bit vectors and also some datastructures like lists and arrays.
 
 As an input STP allows the following operations, which can be grouped in the following way:

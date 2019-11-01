@@ -35,6 +35,29 @@
 }
 {}
 
+%%%%%% OWN Codesnippets
+\newcounter{ncode}[section]
+\renewcommand{\thencode}{\thesection .\arabic{ncode}}
+\DeclareCaptionLabelFormat{codecaption}{Codesnippet \thencode}
+\lstnewenvironment{codesnippet}[1][]
+{   
+    \refstepcounter{ncode}
+    \captionsetup{labelformat=codecaption,labelsep=colon}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
+
 \usepackage{amsmath}
 %%%%%%% Make it possible to write over a leftrightarrow
 
