@@ -38,25 +38,182 @@ int calculateMagicNumber(int a, int b){
   return a * b
 }
 \end{codesnippet}
-
 \begin {figure*}%[!hbtp]
 \begin{adjustbox}{width=\textwidth}
-\begin{tikzpicture}[sibling distance=10em,
-  every node/.style = {shape=rectangle, rounded corners,
-    draw, align=center,
-    top color=white, bottom color=blue!20}]]
-  \node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$\\$\pi = true$}
-    child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = true$}
-	child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = a>=0$}}
-	child { node {$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, x \gets 1\}$\\$\pi = a<0$}
-		child { node {$\sigma = \{a\gets \alpha_a*-1 , b \gets \alpha_b, x \gets 1\}$\\$\pi = a<0$}}
-}}
+\begin{tikzpicture}[
+    grow=down,
+  baseline,
+  level distance=30mm,
+  text depth=.1em,
+  text height=.8em,
+  scale = 1.5,
+  level 1/.style={sibling distance=10em},
+  level 2/.style={sibling distance=45em},
+  level 3/.style={sibling distance=50em},
+  level 4/.style={sibling distance=20em},
+    edge from parent/.style={very thick,draw=blue!40!black!60,
+        shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
+    kant/.style={text width=2cm, text centered, sloped},
+    every node/.style={text ragged, inner sep=2mm},
+    punkt/.style={rectangle, rounded corners, shade, top color=white,
+    bottom color=blue!50!black!20, draw=blue!40!black!60, very
+    thick }
+    ]
 
-;
+\node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+   	 \textbf{State A}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,\highlight{x\gets 1}\}$, $\pi = true$
+                  \nodepart{third}
+	Line 1: x = 1
+}
+    %Lower part lv1
+    child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+   	 \textbf{State B}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = true$
+		\nodepart{third}
+	 Line 2: if($a \geq	0$)
+        }
+        child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+		\textbf{State C}
+	                  \nodepart{second}
+	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
+			\nodepart{third}
+		Line 11: $a = a * -1$
+	        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+		\textbf{State D}
+	                  \nodepart{second}
+	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a<0$
+			\nodepart{third}
+		Line 13: $assert(a!=0)$
+	        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{$\alpha_a * -1 = 0 \land \alpha_a<0 \Leftrightarrow false$}
+	        }
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$a < 0$}}
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State D}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
+		\nodepart{third}
+	Line 3: if($b > 0$)
+        }
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State E}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
+		\nodepart{third}
+	Line 5: $a = a + x$
+        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+		\textbf{State F}
+	                  \nodepart{second}
+	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
+			\nodepart{third}
+		Line 7: if($b<0$)
+	        }
+		 child {
+		        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \alpha_b < 0 \Leftrightarrow \text{not satisfiable}$
+		        }
+		        edge from parent
+		            node[kant, below, pos=.6] {$b<0$}}
+ 		child {
+		        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+			\textbf{State K}
+		                  \nodepart{second}
+		            $\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{b \geq 0}$
+				\nodepart{third}
+			Line 13: $assert(a!=0)$
+		        }
+			  child {
+			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+				\textbf{$\alpha_a+1 = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land b \geq 0 \Leftrightarrow false$}
+			        }
+		        edge from parent
+		            node[kant, below, pos=.6] {}}
+		        edge from parent
+		            node[kant, below, pos=.6] {$b \geq 0$}}
+	        edge from parent
+	            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$b > 0$}}	
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State G}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
+		\nodepart{third}
+	Line 7: if($b < 0$)
+        }
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State H}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a, b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b < 0}$
+		\nodepart{third}
+	Line 8: $a=(a+1)*b$
+        }
+ child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State J}
+                  \nodepart{second}
+            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+		\nodepart{third}
+	Line 13: $assert(a!=0)$
+        }
+        child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{$(\alpha_a+1)*\alpha_b  = 0 \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow false$}
+	        }
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$b < 0$}}
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+	\textbf{State I}
+                  \nodepart{second}
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{b \geq 0}$
+		\nodepart{third}
+	Line 13: $assert(a!=0)$
+        }
+        child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land b \geq 0 \Leftrightarrow true$}
+	        }
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$b \geq 0$}}
+        edge from parent
+            node[kant, below, pos=.6] {$b \leq 0$}}	
+        edge from parent
+            node[kant, below, pos=.6] {$a \geq 0$}}	
+        edge from parent
+            node[kant, below, pos=.6] {}
+    } ;
+
 \end{tikzpicture}
 \end{adjustbox}
 \end{figure*}
-
 
 
 
