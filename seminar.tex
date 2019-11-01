@@ -93,7 +93,7 @@
 \affil{University of Applied Sciences Rapperswil\\Supervisor Prof. Peter Sommerlad\\Seminar HS2019}
 \date{\today}
 
-
+  
 \begin{document}
 \maketitle
 
@@ -101,8 +101,15 @@
 \begin{adjustbox}{width=\textwidth}
 \begin{tikzpicture}[
     grow=down,
-    level 1/.style={sibling distance=2cm,level distance=1cm, scale=4},
-    level 2/.style={sibling distance=2cm, level distance=0.5cm, scale=3},
+  baseline,
+  level distance=30mm,
+  text depth=.1em,
+  text height=.8em,
+  scale = 1.5,
+  level 1/.style={sibling distance=10em},
+  level 2/.style={sibling distance=45em},
+  level 3/.style={sibling distance=50em},
+  level 4/.style={sibling distance=20em},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
