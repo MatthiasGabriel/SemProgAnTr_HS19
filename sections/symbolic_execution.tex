@@ -48,7 +48,7 @@ int calculateMagicNumber(int a, int b){
   text height=.8em,
   scale = 1.5,
   level 1/.style={sibling distance=10em},
-  level 2/.style={sibling distance=37em},
+  level 2/.style={sibling distance=45em},
   level 3/.style={sibling distance=41em},
   level 4/.style={sibling distance=20em},
     edge from parent/.style={very thick,draw=blue!40!black!60,
@@ -68,7 +68,6 @@ int calculateMagicNumber(int a, int b){
                   \nodepart{third}
 	Line 1: x = 1
 }
-    %Lower part lv1
     child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
    	 \textbf{State B}
@@ -78,34 +77,8 @@ int calculateMagicNumber(int a, int b){
 	 Line 2: if($a \geq	0$)
         }
         child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State C}
-	                  \nodepart{second}
-	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
-			\nodepart{third}
-		Line 11: $a = a * -1$
-	        }
-	 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State D}
-	                  \nodepart{second}
-	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a<0$
-			\nodepart{third}
-		Line 13: $assert(a!=0)$
-	        }
-	 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\alpha_a * -1 = 0 \land \alpha_a<0 \Leftrightarrow false$}
-	        }
-        edge from parent
-            node[kant, below, pos=.6] {}}
-        edge from parent
-            node[kant, below, pos=.6] {}}
-        edge from parent
-            node[kant, below, pos=.6] {$a < 0$}}
-        child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State D}
+	\textbf{State C}
                   \nodepart{second}
             $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
 		\nodepart{third}
@@ -113,7 +86,7 @@ int calculateMagicNumber(int a, int b){
         }
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State E}
+	\textbf{State D}
                   \nodepart{second}
             $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
 		\nodepart{third}
@@ -121,7 +94,7 @@ int calculateMagicNumber(int a, int b){
         }
 	 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State F}
+		\textbf{State E}
 	                  \nodepart{second}
 	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
 			\nodepart{third}
@@ -135,7 +108,7 @@ int calculateMagicNumber(int a, int b){
 		            node[kant, below, pos=.6] {$b<0$}}
  		child {
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-			\textbf{State K}
+			\textbf{State F}
 		                  \nodepart{second}
 		            $\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{b \geq 0}$
 				\nodepart{third}
@@ -171,7 +144,7 @@ int calculateMagicNumber(int a, int b){
         }
  child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State J}
+	\textbf{State I}
                   \nodepart{second}
             $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
 		\nodepart{third}
@@ -189,7 +162,7 @@ int calculateMagicNumber(int a, int b){
             node[kant, below, pos=.6] {$b < 0$}}
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State I}
+	\textbf{State J}
                   \nodepart{second}
             $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{b \geq 0}$
 		\nodepart{third}
@@ -206,7 +179,33 @@ int calculateMagicNumber(int a, int b){
         edge from parent
             node[kant, below, pos=.6] {$b \leq 0$}}	
         edge from parent
-            node[kant, below, pos=.6] {$a \geq 0$}}	
+            node[kant, below, pos=.6] {$a \geq 0$}}
+child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+		\textbf{State K}
+	                  \nodepart{second}
+	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
+			\nodepart{third}
+		Line 11: $a = a * -1$
+	        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
+		\textbf{State L}
+	                  \nodepart{second}
+	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a<0$
+			\nodepart{third}
+		Line 13: $assert(a!=0)$
+	        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{$\alpha_a * -1 = 0 \land \alpha_a<0 \Leftrightarrow false$}
+	        }
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {}}
+        edge from parent
+            node[kant, below, pos=.6] {$a < 0$}}	
         edge from parent
             node[kant, below, pos=.6] {}
     } ;
@@ -216,7 +215,7 @@ int calculateMagicNumber(int a, int b){
 \caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}}
 \label{fig:sym_example_one}
 \end{figure*}
-
+\todo{Add last statement to tree}
 This process is visualized in figure \ref{fig:sym_example_one} for the codesnippet \ref{codeSnippet:symbolicExecution}. Assume that someone had written the function $calculateMagicNumber$ which takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria, amongst other things the number b is devided by a mutated a. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by 0 and therefore an error state of the program. Symbolic execution is now capable to determine if there are any input values $a$  and $b$ that violate this assertion.
 
 
