@@ -16,7 +16,7 @@ $$\sigma = \{a\gets 1, b \gets \alpha_b, c \gets 2*\alpha_a\}$$
 
 Whenever a branching statement\footnote{For example the if-statement or switch-statement} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value in regard to the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ used to denote it\cite{SurveySymExec-CSUR18}.
 Consider for example that a statement $if (a > 0)$ is the first statement of your code. Because this is a branching statement the execution engine has to calucate two different path constraints $\pi_{true}$ and $\pi_{false}$
-$$\pi_{true} = \alpha_a = 0$$
+$$\pi_{true} = \alpha_a > 0$$
 $$\pi_{false} = \alpha_a <= 0$$
 
 Directly after the branching the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the pogram does not need further research, as it can no be reached.
@@ -35,7 +35,7 @@ int calculateMagicNumber(int a, int b){
      a = a*-1;
    }
   assert(a != 0);
-  return a * b
+  return b / a
 }
 \end{codesnippet}
 \begin {figure*}%[!hbtp]
@@ -217,7 +217,7 @@ int calculateMagicNumber(int a, int b){
 \label{fig:sym_example_one}
 \end{figure*}
 
-
+This process is visualized in figure \ref{fig:sym_example_one} for the codesnippet \ref{codeSnippet:symbolicExecution}. Assume that someone had written the function $calculateMagicNumber$ which takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria, amongst other things the number b is devided by a mutated a. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by 0 and therefore an error state of the program. Symbolic execution is now capable to determine if there are any input values $a$  and $b$ that violate this assertion.
 
 
 Introduction to the topic of symbolic execution and its limits \cite{SurveySymExec-CSUR18} . Information about symbolic execution is also included in nearly all sources listed in the section concolic testing\todo{Cleanup}
