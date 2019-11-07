@@ -64,7 +64,7 @@ int calculateMagicNumber(int a, int b){
 \node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
    	 \textbf{State A}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,\highlight{x\gets 1}\}$, $\pi = true$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,\highlight{x\gets 1}\}$, $\pi = true$
                   \nodepart{third}
 	Line 1: x = 1
 }
@@ -72,7 +72,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
    	 \textbf{State B}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = true$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = true$
 		\nodepart{third}
 	 Line 2: if($a \geq	0$)
         }
@@ -80,7 +80,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State C}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
 		\nodepart{third}
 	Line 3: if($b > 0$)
         }
@@ -88,7 +88,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State D}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
 		\nodepart{third}
 	Line 5: $a = a + x$
         }
@@ -96,7 +96,7 @@ int calculateMagicNumber(int a, int b){
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 		\textbf{State E}
 	                  \nodepart{second}
-	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
+	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
 			\nodepart{third}
 		Line 7: if($b<0$)
 	        }
@@ -110,13 +110,13 @@ int calculateMagicNumber(int a, int b){
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 			\textbf{State F}
 		                  \nodepart{second}
-		            $\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b\,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{b \geq 0}$
+		            $\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b \geq 0}$
 				\nodepart{third}
 			Line 13: $assert(a!=0)$
 		        }
 			  child {
 			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-				\textbf{$\alpha_a+1 = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land b \geq 0 \Leftrightarrow false$}
+				\textbf{$\alpha_a+1 = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow false$}
 			        }
 		        edge from parent
 		            node[kant, below, pos=.6] {}}
@@ -130,7 +130,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State G}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
 		\nodepart{third}
 	Line 7: if($b < 0$)
         }
@@ -138,7 +138,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State H}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a, b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b < 0}$
+            $\sigma = \{a\gets \alpha_a, b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b < 0}$
 		\nodepart{third}
 	Line 8: $a=(a+1)*b$
         }
@@ -146,7 +146,7 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State I}
                   \nodepart{second}
-            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
 		\nodepart{third}
 	Line 13: $assert(a!=0)$
         }
@@ -164,13 +164,13 @@ int calculateMagicNumber(int a, int b){
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State J}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{b \geq 0}$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b \geq 0}$
 		\nodepart{third}
 	Line 13: $assert(a!=0)$
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land b \geq 0 \Leftrightarrow true$}
+		\textbf{$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow true$}
 	        }
         edge from parent
             node[kant, below, pos=.6] {}}
@@ -184,7 +184,7 @@ child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 		\textbf{State K}
 	                  \nodepart{second}
-	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
+	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
 			\nodepart{third}
 		Line 11: $a = a * -1$
 	        }
@@ -192,7 +192,7 @@ child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 		\textbf{State L}
 	                  \nodepart{second}
-	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b\,x\gets 1\}$, $\pi = \alpha_a<0$
+	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a<0$
 			\nodepart{third}
 		Line 13: $assert(a!=0)$
 	        }
