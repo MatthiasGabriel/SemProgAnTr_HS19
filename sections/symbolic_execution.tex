@@ -215,8 +215,14 @@ child {
 \caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}}
 \label{fig:sym_example_one}
 \end{figure*}
-\todo{Add last statement to tree}
-This process is visualized in figure \ref{fig:sym_example_one} for the codesnippet \ref{codeSnippet:symbolicExecution}. Assume that someone had written the function $calculateMagicNumber$ which takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria, amongst other things the number b is devided by a mutated a. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by 0 and therefore an error state of the program. Symbolic execution is now capable to determine if there are any input values $a$  and $b$ that violate this assertion.
+\todo{Add highlighting to assert step. Add last statement to tree}
+
+Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria, amongst other things the number b is devided by a mutated a. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by 0 and therefore an error state of the program.
+
+A symbolic execution engine is now capable to determine if there are any input values $a$  and $b$ that violate this assertion. To check if an assertion might fail the negative of the assert condition is added to the path condition and then checked for a valid input by the SMT solver. The whole symbolic execution tree is illustrated in figure \ref{fig:sym_example_one}.
+
+As you can see the assertion fails when it is applied to $State J$, because there's a valid assignment $\alpha_a = 0$ and $\alpha_b = 0$ for this formula. Note that this is a special case, because the condition can only be met by a unique pair of values. This does not have to be the case. Imagine that the whole codeblock on lines 7-9 is not present. The States H, I and J would therefore vanish from the symbolic execution tree and the condition that's checked at the assertion is a follows:
+$$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0$$
+This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero.
 
 
-Introduction to the topic of symbolic execution and its limits \cite{SurveySymExec-CSUR18} . Information about symbolic execution is also included in nearly all sources listed in the section concolic testing\todo{Cleanup}
