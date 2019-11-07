@@ -21,7 +21,7 @@ $$\pi_{false} = \alpha_a <= 0$$
 
 Directly after the branching the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the pogram does not need further research, as it can no be reached.
 
-\begin{codesnippet}[caption={Simple Symbolic Execution Example}, label={codeSnippetSymbolicExecution}]
+\begin{codesnippet}[caption={Simple Symbolic Execution Example}, label={codeSnippet:symbolicExecution}]
 int calculateMagicNumber(int a, int b){
    int x = 1;
    if(a >= 0){
@@ -213,6 +213,8 @@ int calculateMagicNumber(int a, int b){
 
 \end{tikzpicture}
 \end{adjustbox}
+\caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}}
+\label{fig:sym_example_one}
 \end{figure*}
 
 
