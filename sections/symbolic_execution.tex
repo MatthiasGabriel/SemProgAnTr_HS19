@@ -231,7 +231,11 @@ As you can see the assertion fails when it is applied to $State J$, because ther
 $$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0$$
 This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero. In this case the symbolic execution engine normally will return one concrete example of this range, however it's not defined which one exactly. 
 \subsection{Restriction in practical problems}
-Due to the fact that every branching statement creates two new states, which together cover both possible execution paths, it's possible to reason about the program with 100\% certainty. For example if a branch is not reachable by symbolic execution there is literaly no possiblity for any concrete values to reach this branch. Note however that the growth of new states is exponential in relation to the number of branching statements. Even for small programs as seen in the example \ref{fig:sym_example_one} the number of states is quite big. The main problem arrises with the introduction of loops, as each iteration results in a new subtree. Lets consider the small example \ref{codeSnippet:symbolicExecutionLoop} which is a very naive program that calucate the quotient of a division\footnote{For presentational reasons the dividend is renamed to a, the divisor is renamed to b and the quotient is renamed to q}.
+Due to the fact that every branching statement creates two new states, which together cover both possible execution paths, it's possible to reason about the program with 100\% certainty. For example if a branch is not reachable by symbolic execution there is literaly no possiblity for any concrete values to reach this branch. Note however that the growth of new states is exponential in relation to the number of branching statements. Even for small programs as seen in the example \ref{fig:sym_example_one} the number of states is quite big. The main problem arrises with the introduction of loops, as each iteration results in a new subtree.
+
+Lets consider the small example \ref{codeSnippet:symbolicExecutionLoop} which is a very naive program that calucate the quotient of a division\footnote{For presentational reasons the dividend is renamed to a, the divisor to b and the quotient to q}. A partial symbolic execution graph of this function is displayed in \ref{fig:sym_tree_loop}. Based on the state B the while loop at line 3 will be hit and a branching takes place and the condition $\alpha_a < \alpha_b$ is added to $\pi_{false}$ which leads to state C. It is possible to find a combination of $\alpha_a$ and $\alpha_b$ such that $\pi$ of state C is evaluated to true, for example $\alpha_a \gets 1$ and $\alpha_b \gets 2$. On the next statement of state C the value of q will be returned and this branch ends. On the other hand $\alpha_a \geq \alpha_b$ added $\pi_{true}$, which results in state D. In the following states E and F, the variables $a$ and $q$ get updated and with state F the condition will be checked again. As $a$ now has the value $\alpha_a - \alpha_b$ the condition is not quite the same and a new branch with $\pi_{false} = \alpha_a \geq \alpha_b \land \alpha_a - \alpha_b < \alpha_b$ is calculated. It is possible to find values that match this requirement, for example $\alpha_a \gets 3$ and $\alpha_b \gets 2$. Because of this the value of q, which is at this point 1, will be returned. This process will continue forever.
+
+
 \begin{codesnippet}[caption={Symbolic Execution Looping}, label={codeSnippet:symbolicExecutionLoop}]
 int calucateQuotient(int a, int b){
    int q = 0;
@@ -358,5 +362,5 @@ child {
 \end{tikzpicture}
 \end{adjustbox}
 \caption{Example of a partial symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecutionLoop}.}
-\label{fig:sym_example_loop}
+\label{fig:sym_tree_loop}
 \end{figure*}
