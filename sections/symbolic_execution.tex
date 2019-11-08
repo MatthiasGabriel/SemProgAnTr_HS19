@@ -64,17 +64,17 @@ int calculateMagicNumber(int a, int b){
 \node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
    	 \textbf{State A}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,\highlight{x\gets 1}\}$, $\pi = true$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$, $\pi = true$
                   \nodepart{third}
-	Line 1: x = 1
+	Line 2: x = 1
 }
     child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
    	 \textbf{State B}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = true$
+            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,\highlight{x\gets 1}\}$, $\pi = true$
 		\nodepart{third}
-	 Line 2: if($a \geq	0$)
+	 Line 3: if($a \geq	0$)
         }
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
@@ -82,7 +82,7 @@ int calculateMagicNumber(int a, int b){
                   \nodepart{second}
             $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
 		\nodepart{third}
-	Line 3: if($b > 0$)
+	Line 4: if($b > 0$)
         }
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
