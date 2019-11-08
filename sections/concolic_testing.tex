@@ -9,8 +9,12 @@ If the statement needs a modification of $\sigma$, the instruction gets mapped i
 
 If it is a branching statement $\pi_{true}$ aswell as $\pi_{false}$ are calcuated and duplication of the current state takes place after the two $\pi$ are checked for feasability in combination with the current path condition.
 
-In addition to branching statements each potentially dangerous operation, such as pointer dereferencing, array access or even division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation.
+In addition to branching statements each potentially dangerous operation, such as pointer dereferencing or division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation. This state never has a subtree attached, because if the path condition is infeasable the execution stops automatically, before the branching actually takes place and if it's feasable an error is raised resulting in the cancelation of this subtree. On the other branch the negative of the condition is added to prevent the error in this state and be able to continue the analysis of the program.
 
+The only special case of these dangerous operations are loading and storing operations. KLEE maps every object to an SPT specific array. This enables SPT to ignore the parts of the state date, which are not directly related to the expression that gets evaluated. Because it could be possible that a "symbolic" pointer refer to different objects, the state will be cloned for each of the objects as soon as the pointer gets dereferenced. With the cloning it can be ensured that in every state the pointer references exactly one specific object. This may seem very pricy, as for each possible object a new state has to be created. However in reality semantic pointer to multiple objects rarely happen. \todo{describe copy-on-write} \todo{describe constraint solving optimization and caching} \todo{describe search strategies which prevent starvation due to loops} \todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
+
+
+\todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
 \todo{Cleanup}
 What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
 What are the differences, advantages and disadvantages in relation to symbolic execution.
