@@ -20,7 +20,7 @@ $$\pi_{true} = \alpha_a > 0$$
 $$\pi_{false} = \alpha_a <= 0$$
 
 Directly after the branching the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the pogram does not need further research, as it can no be reached.
-
+\subsection{An example}
 \begin{codesnippet}[caption={Simple Symbolic Execution Example}, label={codeSnippet:symbolicExecution}]
 int calculateMagicNumber(int a, int b){
    int x = 1;
@@ -219,10 +219,16 @@ child {
 
 Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria, amongst other things the number b is devided by a mutated a. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by 0 and therefore an error state of the program.
 
-A symbolic execution engine is now capable to determine if there are any input values $a$  and $b$ that violate this assertion. To check if an assertion might fail the negative of the assert condition is added to the path condition and then checked for a valid input by the SMT solver. The whole symbolic execution tree is illustrated in figure \ref{fig:sym_example_one}.
-
+A symbolic execution engine is now capable to determine if there are any input values $a$  and $b$ that violate this assertion. To check if an assertion might fail the negative of the assert condition is added to the path condition and then checked for a valid input by the SMT solver. The whole symbolic execution tree is illustrated in figure \ref{fig:sym_example_one}. Each node consists of 4 different parts:
+\begin{itemize}
+\item The name of the state, which is used to reference a specific state
+\item $\sigma$ contains the current symbolic values of the variables
+\item $\pi$ is the current path condition
+\item The next statement which should be analysed
+\end{itemize}
+Whenever $\pi$ gets updated a branching takes place. In our example the left child will contain the branch which evaluates the statement to true and the right childs $\pi$ will get updated by the negated condition.
 As you can see the assertion fails when it is applied to $State J$, because there's a valid assignment $\alpha_a = 0$ and $\alpha_b = 0$ for this formula. Note that this is a special case, because the condition can only be met by a unique pair of values. This does not have to be the case. Imagine that the whole codeblock on lines 7-9 is not present. The States H, I and J would therefore vanish from the symbolic execution tree and the condition that's checked at the assertion is a follows:
 $$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0$$
-This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero.
-
-
+This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero. In this case the symbolic execution engine normally will return one concrete example of this range, however it's not defined which one exactly. 
+\subsection{Restriction in practical problems}
+Due to the fact that every branching statement creates two new states, which together cover both possible execution paths, it's possible to reason about the program with 100\% certainty. For example if a branch is not reachable by symbolic execution there is literaly no possiblity for any concrete values to reach this branch. Note however that the growth of new states is exponential in relation to the number of branching statements. Even for small programs as seen in the example \ref{fig:sym_example_one} the number of states is quite big. The main problem arrises with the introduction of loops, as each iteration results in a new subtree. Lets consider the small example \ref{codeSnippet:symbolicExecutionLoop} which is a very naive program that calucate the quotient of a division\footnote{For presentational reasons the dividend is renamed to a, the divisor is renamed to b and the quotient is renamed to q}.
