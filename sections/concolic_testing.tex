@@ -1,4 +1,17 @@
-\section{Concolic Testing}
+\section{Concolic Testing} \label{section:concolic_testing}
+Concolic execution tries to overcome the restriction of symbolic execution, that were discussed in \ref{section:symbolic_restrictions}. There are many different approaches to do this, but all of them have in common, that they trade in some of the completeness to be able to complete at least a partial analysis of the program.
+On the basis of KLEE \cite{Cadar:2008:KUA:1855741.1855756} one possible approach to these two problems will be presented in this section.
+
+KLEE only works on programs that are first compiled into the LLVM an assembly language, this is normally done by using the compiler Clang \footnote{Clang is currently able to compile C, C++  and Objective-C programs into LLVM}. 
+Each of the states that we saw in the previous examples \ref{fig:sym_example_one} and \ref{fig:sym_tree_loop} has the properties $\sigma$, now called heap, and $\pi$, which is called path condition. Additionally each state has a register file, a stack, a program counter. Based on the current instruction that is processed KLEE modifies $\sigma$ or $\pi$.
+
+If the statement needs a modification of $\sigma$, the instruction gets mapped into an identitcal symbolic instruction. For most instructions the symbolic execution is trivial. For example the result of an addition of two symbolic values just saves that the new variable is the addition of the two values.\todo{non trivial instructions} Note however that KLEE executes the operation directly if all input values are concrete and therefore assigns a new concrete value to the variable.
+
+If it is a branching statement $\pi_{true}$ aswell as $\pi_{false}$ are calcuated and duplication of the current state takes place after the two $\pi$ are checked for feasability in combination with the current path condition.
+
+In addition to branching statements each potentially dangerous operation, such as pointer dereferencing, array access or even division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation.
+
+\todo{Cleanup}
 What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
 What are the differences, advantages and disadvantages in relation to symbolic execution.
 \cite{Cadar:2006:EAG:1180405.1180445}
