@@ -2,16 +2,106 @@
 Concolic execution tries to overcome the restriction of symbolic execution, that were discussed in \ref{section:symbolic_restrictions}. There are many different approaches to do this, but all of them have in common, that they trade in some of the completeness to be able to complete at least a partial analysis of the program.
 On the basis of KLEE \cite{Cadar:2008:KUA:1855741.1855756} one possible approach to these two problems will be presented in this section.
 
+\subsection{Main approaches of KLEE}
 KLEE only works on programs that are first compiled into the LLVM an assembly language, this is normally done by using the compiler Clang \footnote{Clang is currently able to compile C, C++  and Objective-C programs into LLVM}. 
-Each of the states that we saw in the previous examples \ref{fig:sym_example_one} and \ref{fig:sym_tree_loop} has the properties $\sigma$, now called heap, and $\pi$, which is called path condition. Additionally each state has a register file, a stack, a program counter. Based on the current instruction that is processed KLEE modifies $\sigma$ or $\pi$.
+Each of the states that we saw in the previous examples \ref{fig:sym_example_one} and \ref{fig:sym_tree_loop} has the properties $\sigma$, now called heap, and $\pi$, which is called path condition. Additionally each state has a register file, a stack and an instruction pointer. Based on the current instruction that is processed KLEE either modifies $\sigma$ or $\pi$ as we saw in the previous chapters.
 
 If the statement needs a modification of $\sigma$, the instruction gets mapped into an identitcal symbolic instruction. For most instructions the symbolic execution is trivial. For example the result of an addition of two symbolic values just saves that the new variable is the addition of the two values.\todo{non trivial instructions} Note however that KLEE executes the operation directly if all input values are concrete and therefore assigns a new concrete value to the variable.
 
 If it is a branching statement $\pi_{true}$ aswell as $\pi_{false}$ are calcuated and duplication of the current state takes place after the two $\pi$ are checked for feasability in combination with the current path condition.
 
+\subsubsection{Approach for dangerous operations}
 In addition to branching statements each potentially dangerous operation, such as pointer dereferencing or division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation. This state never has a subtree attached, because if the path condition is infeasable the execution stops automatically, before the branching actually takes place and if it's feasable an error is raised resulting in the cancelation of this subtree. On the other branch the negative of the condition is added to prevent the error in this state and be able to continue the analysis of the program.
 
-The only special case of these dangerous operations are loading and storing operations. KLEE maps every object to an SPT specific array. This enables SPT to ignore the parts of the state date, which are not directly related to the expression that gets evaluated. Because it could be possible that a "symbolic" pointer refer to different objects, the state will be cloned for each of the objects as soon as the pointer gets dereferenced. With the cloning it can be ensured that in every state the pointer references exactly one specific object. This may seem very pricy, as for each possible object a new state has to be created. However in reality semantic pointer to multiple objects rarely happen. \todo{describe copy-on-write} \todo{describe constraint solving optimization and caching} \todo{describe search strategies which prevent starvation due to loops} \todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
+The only special case of these dangerous operations are loading and storing operations. KLEE maps every object to an SPT specific array. This enables SPT to ignore the parts of the state date, which are not directly related to the expression that gets evaluated. Because it could be possible that a "symbolic" pointer refer to different objects, the state will be cloned for each of the objects as soon as the pointer gets dereferenced. With the cloning it can be ensured that in every state the pointer references exactly one specific object. This may seem very pricy, as for each possible object a new state has to be created. However in reality semantic pointer to multiple objects rarely happen. 
+
+\subsubsection{State management}
+Because there are many states created and even hold during the execution, KLEE tries to minimize both the creation time of a new state aswell as the memory footprint. It does this by taking advantage of the big redundancy that these states have, because they are often related and only differ in some of their properties.  To be able to use this redandancy KLEE treats all memory objects as immutable and thus can reuse them as many time as required. The consequence of this property is that whenever an object has to be modified it needs to be copied. This process is also called copy-on-write.
+
+\subsubsection{State scheduling}
+Even if the states are very slim and efficiently created depending on the order of the computation the computation engine could be blocked by a single loop, leading to starvation of other states. Assume a very simplistic depth-first approach that on every branching condition first creates the two related states and after that first processes the state where the branching condition is fulfilled. In the example with a loop\ref{fig:sym_tree_loop} the engine would always process the left child and no output would be generated at all\footnote{State C and State G would be constructed but never analyzed and therefore no return statement would be reached.}.
+
+To prevent this KLEE implements two different kind of scheduling algorithms. 
+
+Random Path Selection organises the states in a binary tree, as visualised by the previous examples, but instead of just going depth first at the current path, the algorithm randomly selects which path to go when traversing the tree. After each execution of a state the traversing starts at the top again and thus favors unprocessed states that are high in the tree as visualized in figure \ref{fig:state_tree_probability}. Because of this starvation of states is no longer possible. A nice side effect of this selection is that the conditions in higher states are smaller and therefore the processing takes less effort.
+
+
+Coverage-Optimized Search is the second algorithm that is included in KLEE. As its name suggests it tries to maximize the coverage. It uses different heuristics to determine how probable it is to reach currently uncovered code in the next few steps. After that it randomly selects the branch based on this probability, prefering states with higher probability.
+To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner.
+
+\todo{add other search strategies that are not used in KLEE}
+\begin{figure}
+\begin{tikzpicture}[
+    grow=down,
+  baseline,
+  level distance=25mm,
+  text depth=.1em,
+  text height=.8em,
+  scale = 1,
+  level 1/.style={sibling distance=11em},
+  level 2/.style={sibling distance=10em},
+    edge from parent/.style={very thick,draw=blue!40!black!60,
+        shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
+    kant/.style={text width=2cm, text centered},
+    straight/.style={text width=2cm},
+    every node/.style={text ragged, inner sep=2mm},
+    pending/.style={rectangle, rounded corners, shade, top color=white,
+    bottom color=blue!50!black!20, draw=blue!40!black!60, very
+    thick },
+    analysed/.style={rectangle, rounded corners, shade, top color=blue!50!black!20,
+    bottom color=blue!50!black!40, draw=blue!40!black!60, very
+    thick }
+    ]
+
+\node[analysed] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+   	 \textbf{State A}}
+child {
+	        node[analysed] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{State B}
+	        }
+child {
+	        node[pending] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+		\textbf{State F}
+		\nodepart{second}
+   		0.5
+	        }
+        edge from parent
+            node[straight, right, midway] {1.0}}
+        edge from parent
+            node[kant, below, pos=.4] {0.5}}
+child {
+	        node[analysed] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		\textbf{State C}
+	        }
+child {
+	        node[pending] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+		\textbf{State D}		
+		\nodepart{second}
+   		0.25
+	        }
+        edge from parent
+            node[kant, below, pos=.4] {0.5}}
+child {
+	        node[pending] [rectangle split, rectangle split, rectangle split parts=2, text ragged] {
+		\textbf{State E}
+		\nodepart{second}
+   		0.25
+	        }
+        edge from parent
+            node[kant, below, pos=.4] {0.5}}
+        edge from parent
+            node[kant, below, pos=.4] {0.5}};
+
+\end{tikzpicture}
+\caption{Binary state tree with the chance to get selected. On the edge the relative chance is given, which is normally either 1 or 0.5 based on the above statement.}
+\label{fig:state_tree_probability}
+\end{figure}
+\subsubsection{Query optimization}
+\todo{describe constraint solving optimization and caching}
+In all this KLEE does literally nothing different than specified in the previous chapter \ref{section:symbolic_execution} and implementing a specific and efficient memory and state managment, query optimization with caching and different state schedulings. But there's an additional topic that is tackled by KLEE.
+\subsubsection{Dependency on environment}
+\todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
 
 
 \todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
