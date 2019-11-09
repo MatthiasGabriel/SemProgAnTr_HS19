@@ -47,10 +47,10 @@ int calculateMagicNumber(int a, int b){
   text depth=.1em,
   text height=.8em,
   scale = 1.5,
-  level 1/.style={sibling distance=10em, level distance = 25mm},
-  level 2/.style={sibling distance=45em, level distance = 35mm},
-  level 3/.style={sibling distance=41em},
-  level 4/.style={sibling distance=20em},
+  level 1/.style={sibling distance=10em, level distance = 30mm},
+  level 2/.style={sibling distance=35em, level distance = 35mm},
+  level 3/.style={sibling distance=32em},
+  level 4/.style={sibling distance=14em},
   level 6/.style={level distance =20mm},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
@@ -62,153 +62,177 @@ int calculateMagicNumber(int a, int b){
     thick }
     ]
 
-\node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-   	 \textbf{State A}
-                  \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$, $\pi = true$
-                  \nodepart{third}
-	Line 2: x = 1
+\node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+	   	 \textbf{State A}
+            \nodepart{second}
+           	 $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$
+	\nodepart{third}
+		$\pi = true$
+           \nodepart{fourth}
+		Line 2: x = 1
 }
     child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-   	 \textbf{State B}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+		   	 \textbf{State B}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,\highlight{x\gets 1}\}$, $\pi = true$
+		            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,\highlight{x\gets 1}\}$
 		\nodepart{third}
-	 Line 3: if($a \geq	0$)
+			$\pi = true$
+		\nodepart{fourth}
+			 Line 3: if($a \geq	0$)
         }
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State C}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State C}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \highlight{\alpha_a \geq 0} $
+			$\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 4: if($b > 0$)
+			$\pi = \highlight{\alpha_a \geq 0} $
+		\nodepart{fourth}
+			Line 4: if($b > 0$)
         }
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State D}
-                  \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State D}
+		\nodepart{second}
+ 		           $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 5: $a = a + x$
+			$\pi =  \alpha_a \geq 0 \land \highlight{\alpha_b > 0}$
+		\nodepart{fourth}
+			Line 5: $a = a + x$
         }
 	 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State E}
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State E}
 	                  \nodepart{second}
-	            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
+			            $\sigma = \{\highlight{a\gets \alpha_a +1}, b \gets \alpha_b,x\gets 1\}$
 			\nodepart{third}
-		Line 7: if($b<0$)
+				$\pi =  \alpha_a \geq 0 \land \alpha_b > 0$
+			\nodepart{fourth}
+				Line 7: if($b<0$)
 	        }
 		 child {
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \alpha_b < 0 \Leftrightarrow \text{not satisfiable}$
 		        }
 		        edge from parent
-		            node[kant, below, pos=.6] {$\alpha_b<0$}}
+		            node[kant, below, pos=.5] {$\alpha_b<0$}}
  		child {
-		        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-			\textbf{State F}
+		        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+					\textbf{State F}
 		                  \nodepart{second}
-		            $\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b,x\gets 1\}$, $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b \geq 0}$
+		            		$\sigma = \{a\gets \alpha_a +1, b \gets \alpha_b,x\gets 1\}$
 				\nodepart{third}
-			Line 13: $assert(a!=0)$
+					$\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b \geq 0}$
+				\nodepart{fourth}
+					Line 13: $assert(a!=0)$
 		        }
 			  child {
 			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 				\textbf{$\alpha_a+1 = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow false$}
 			        }
 		        edge from parent
-		            node[kant, below, pos=.6] {}}
+		            node[kant, below, pos=.5] {}}
 		        edge from parent
-		            node[kant, below, pos=.6] {$\alpha_b \geq 0$}}
+		            node[kant, below, pos=.5] {$\alpha_b \geq 0$}}
 	        edge from parent
-	            node[kant, below, pos=.6] {}}
+	            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_b > 0$}}	
+            node[kant, below, pos=.5] {$\alpha_b > 0$}}	
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State G}
-                  \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State G}
+	           \nodepart{second}
+		            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 7: if($b < 0$)
+			$\pi = \alpha_a \geq 0 \land \highlight{\alpha_b \leq 0}$
+		\nodepart{fourth}
+			Line 7: if($b < 0$)
         }
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State H}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State H}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a, b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b < 0}$
+		            $\sigma = \{a\gets \alpha_a, b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 8: $a=(a+1)*b$
+			$\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b < 0}$
+		\nodepart{fourth}
+			Line 8: $a=(a+1)*b$
         }
  child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State I}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State I}
                   \nodepart{second}
-            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+		            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 13: $assert(a!=0)$
+			$\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+		\nodepart{fourth}
+			Line 13: $assert(a!=0)$
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 		\textbf{$(\alpha_a+1)*\alpha_b  = 0 \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow false$}
 	        }
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_b < 0$}}
+            node[kant, below, pos=.5] {$\alpha_b < 0$}}
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State J}
-                  \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b \geq 0}$
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State J}
+		\nodepart{second}
+		            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$
 		\nodepart{third}
-	Line 13: $assert(a!=0)$
+			$\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \highlight{\alpha_b \geq 0}$
+		\nodepart{fourth}
+			Line 13: $assert(a!=0)$
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 		\textbf{$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow true$}
 	        }
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_b \geq 0$}}
+            node[kant, below, pos=.5] {$\alpha_b \geq 0$}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_b \leq 0$}}	
+            node[kant, below, pos=.5] {$\alpha_b \leq 0$}}	
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_a \geq 0$}}
+            node[kant, below, pos=.5] {$\alpha_a \geq 0$}}
 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State K}
-	                  \nodepart{second}
-	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$, $\pi = \highlight{\alpha_a<0}$
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State K}
+			\nodepart{second}
+			            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,x\gets 1\}$
 			\nodepart{third}
-		Line 11: $a = a * -1$
+				$\pi = \highlight{\alpha_a<0}$
+			\nodepart{fourth}
+				Line 11: $a = a * -1$
 	        }
 	 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State L}
-	                  \nodepart{second}
-	            $\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b,x\gets 1\}$, $\pi = \alpha_a<0$
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State L}
+			\nodepart{second}
+				$\sigma = \{\highlight{a\gets \alpha_a * -1} , b \gets \alpha_b,x\gets 1\}$
 			\nodepart{third}
-		Line 13: $assert(a!=0)$
+				$\pi = \alpha_a<0$
+			\nodepart{fourth}
+				Line 13: $assert(a!=0)$
 	        }
 	 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 		\textbf{$\alpha_a * -1 = 0 \land \alpha_a<0 \Leftrightarrow false$}
 	        }
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_a < 0$}}	
+            node[kant, below, pos=.5] {$\alpha_a < 0$}}	
         edge from parent
-            node[kant, below, pos=.6] {}
+            node[kant, below, pos=.5] {}
     } ;
 
 \end{tikzpicture}
@@ -250,20 +274,20 @@ int calucateQuotient(int a, int b){
    return q;
 }
 \end{codesnippet}
-\begin {figure*}%[!hbtp]
-\begin{adjustbox}{width=\textwidth}
+\begin {figure*}[!ht]
+\begin{adjustbox}{width=10cm}
 \begin{tikzpicture}[
     grow=down,
   baseline,
   text depth=.1em,
   text height=.8em,
   scale = 1.5,
-  level 1/.style={sibling distance=10em, level distance=25mm},
+  level 1/.style={sibling distance=10em, level distance=30mm},
   level 2/.style={sibling distance=20em, level distance=35mm},
-  level 3/.style={sibling distance=41em, level distance=25mm},
-  level 4/.style={sibling distance=20em, level distance=25mm},
+  level 3/.style={sibling distance=41em, level distance=30mm},
+  level 4/.style={sibling distance=20em, level distance=30mm},
   level 5/.style={sibling distance=20em, level distance=35mm},
-  level 6/.style={sibling distance=20em, level distance=25mm},
+  level 6/.style={sibling distance=20em, level distance=30mm},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
@@ -274,60 +298,74 @@ int calucateQuotient(int a, int b){
     thick }
     ]
 
-\node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-   	 \textbf{State A}
+\node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+		   	 \textbf{State A}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$, $\pi = true$
+			$\sigma = \{a\gets \alpha_a , b \gets \alpha_b\}$
                   \nodepart{third}
-	Line 2: q = 0}
+			$\pi = true$
+                  \nodepart{fourth}
+			Line 2: q = 0}
     child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State B}
-	                  \nodepart{second}
-            	$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, \highlight{q \gets 0}\}$, $\pi = true$
-			\nodepart{third}
-		Line 3: $while(a>=b)$
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State B}
+		\nodepart{second}
+	            	$\sigma = \{a\gets \alpha_a , b \gets \alpha_b, \highlight{q \gets 0}\}$
+		\nodepart{third}
+			$\pi = true$
+		\nodepart{fourth}
+			Line 3: $while(a>=b)$
 	        }
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State D}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State D}
                   \nodepart{second}
-            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 0\}$, $\pi = \highlight{\alpha_a \geq \alpha_b} $
+   		         $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 0\}$
 		\nodepart{third}
-	Line 4: $a = a -b$
+			$\pi = \highlight{\alpha_a \geq \alpha_b} $
+		\nodepart{fourth}
+			Line 4: $a = a -b$
         }
         child {
-        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-	\textbf{State E}
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State E}
                   \nodepart{second}
-            $\sigma = \{\highlight{a\gets \alpha_a - \alpha_b}, b \gets \alpha_b,q\gets 0\}$, $\pi =  \alpha_a \geq \alpha_b$
+		            $\sigma = \{\highlight{a\gets \alpha_a - \alpha_b}, b \gets \alpha_b,q\gets 0\}$
 		\nodepart{third}
-	Line 5: $q = q + 1$
+			$\pi =  \alpha_a \geq \alpha_b$
+		\nodepart{fourth}
+			Line 5: $q = q + 1$
         }
 	 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State F}
-	                  \nodepart{second}
-	            $\sigma = \{a\gets \alpha_a - \alpha_b, b \gets \alpha_b,\highlight{q\gets 1}\}$, $\pi =  \alpha_a \geq \alpha_b$
-			\nodepart{third}
-		Line 3: $while(a>=b)$
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State F}
+	           \nodepart{second}
+		            $\sigma = \{a\gets \alpha_a - \alpha_b, b \gets \alpha_b,\highlight{q\gets 1}\}$
+		\nodepart{third}
+			$\pi =  \alpha_a \geq \alpha_b$
+		\nodepart{fourth}
+			Line 3: $while(a>=b)$
 	        }
 		 child {
-        			node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-			\textbf{State H}
+        			node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State H}
 	                     \nodepart{second}
-		          $\sigma = \{a\gets \alpha_a-\alpha_b , b \gets \alpha_b,q\gets 0\}$, $\pi = \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b \geq \alpha_b} $
+		          		$\sigma = \{a\gets \alpha_a-\alpha_b , b \gets \alpha_b,q\gets 0\}$
 			\nodepart{third}
-			Line 4: $a = a -b$
+				$\pi = \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b \geq \alpha_b} $
+			\nodepart{fourth}
+				Line 4: $a = a -b$
 		        }
 		        edge from parent
-		            node[kant, below, pos=.6] {$\alpha_a-\alpha_b \geq \alpha_b$}}
+		            node[kant, below, pos=.5] {$\alpha_a-\alpha_b \geq \alpha_b$}}
  		child {
-	        		node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-			\textbf{State G}
+	        		node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State G}
 	                  	\nodepart{second}
-	            		$\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 1\}$, $\pi =  \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b < \alpha_b}$
+	            		$\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 1\}$
 			\nodepart{third}
+				$\pi =  \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b < \alpha_b}$
+			\nodepart{fourth}
 				Line 7: $return \text{ } q$
 	       		 }
 			  child {
@@ -335,33 +373,35 @@ int calucateQuotient(int a, int b){
 					\textbf{$return \text{ } 1$}
 			        }
 		        edge from parent
-		            node[kant, below, pos=.6] {}}
+		            node[kant, below, pos=.5] {}}
 		        edge from parent
-		            node[kant, below, pos=.6] {$b \geq 0$}}
+		            node[kant, below, pos=.5] {$b \geq 0$}}
 	        edge from parent
-	            node[kant, below, pos=.6] {}}
+	            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {}}		
+            node[kant, below, pos=.5] {}}		
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_a \geq \alpha_b$}}
+            node[kant, below, pos=.5] {$\alpha_a \geq \alpha_b$}}
 child {
-	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
-		\textbf{State C}
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State C}
 	                  \nodepart{second}
-	            $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 0\}$, $\pi = \highlight{\alpha_a<\alpha_b}$
+	           		 $\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 0\}$
 			\nodepart{third}
-		Line 7: $return \text{ } q$
+				$\pi = \highlight{\alpha_a<\alpha_b}$
+			\nodepart{fourth}
+				Line 7: $return \text{ } q$
 	        }
 	 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
 		\textbf{$return \text{ } 0$}
 	        }
         edge from parent
-            node[kant, below, pos=.6] {}}
+            node[kant, below, pos=.5] {}}
         edge from parent
-            node[kant, below, pos=.6] {$\alpha_a < \alpha_b$}}	
+            node[kant, below, pos=.5] {$\alpha_a < \alpha_b$}}	
         edge from parent
-            node[kant, below, pos=.6] {}
+            node[kant, below, pos=.5] {}
     } ;
 
 \end{tikzpicture}
