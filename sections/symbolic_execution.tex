@@ -38,7 +38,7 @@ int calculateMagicNumber(int a, int b){
   return b / a
 }
 \end{codesnippet}
-\begin {figure*}%[!hbtp]
+\begin {figure*}[!ht]
 \begin{adjustbox}{width=\textwidth}
 \begin{tikzpicture}[
     grow=down,
@@ -47,10 +47,11 @@ int calculateMagicNumber(int a, int b){
   text depth=.1em,
   text height=.8em,
   scale = 1.5,
-  level 1/.style={sibling distance=10em},
-  level 2/.style={sibling distance=45em},
+  level 1/.style={sibling distance=10em, level distance = 25mm},
+  level 2/.style={sibling distance=45em, level distance = 35mm},
   level 3/.style={sibling distance=41em},
   level 4/.style={sibling distance=20em},
+  level 6/.style={level distance =20mm},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
@@ -105,7 +106,7 @@ int calculateMagicNumber(int a, int b){
 		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \alpha_b < 0 \Leftrightarrow \text{not satisfiable}$
 		        }
 		        edge from parent
-		            node[kant, below, pos=.6] {$b<0$}}
+		            node[kant, below, pos=.6] {$\alpha_b<0$}}
  		child {
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 			\textbf{State F}
@@ -121,11 +122,11 @@ int calculateMagicNumber(int a, int b){
 		        edge from parent
 		            node[kant, below, pos=.6] {}}
 		        edge from parent
-		            node[kant, below, pos=.6] {$b \geq 0$}}
+		            node[kant, below, pos=.6] {$\alpha_b \geq 0$}}
 	        edge from parent
 	            node[kant, below, pos=.6] {}}
         edge from parent
-            node[kant, below, pos=.6] {$b > 0$}}	
+            node[kant, below, pos=.6] {$\alpha_b > 0$}}	
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State G}
@@ -159,7 +160,7 @@ int calculateMagicNumber(int a, int b){
         edge from parent
             node[kant, below, pos=.6] {}}
         edge from parent
-            node[kant, below, pos=.6] {$b < 0$}}
+            node[kant, below, pos=.6] {$\alpha_b < 0$}}
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 	\textbf{State J}
@@ -175,11 +176,11 @@ int calculateMagicNumber(int a, int b){
         edge from parent
             node[kant, below, pos=.6] {}}
         edge from parent
-            node[kant, below, pos=.6] {$b \geq 0$}}
+            node[kant, below, pos=.6] {$\alpha_b \geq 0$}}
         edge from parent
-            node[kant, below, pos=.6] {$b \leq 0$}}	
+            node[kant, below, pos=.6] {$\alpha_b \leq 0$}}	
         edge from parent
-            node[kant, below, pos=.6] {$a \geq 0$}}
+            node[kant, below, pos=.6] {$\alpha_a \geq 0$}}
 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=3, text ragged] {
 		\textbf{State K}
@@ -205,7 +206,7 @@ child {
         edge from parent
             node[kant, below, pos=.6] {}}
         edge from parent
-            node[kant, below, pos=.6] {$a < 0$}}	
+            node[kant, below, pos=.6] {$\alpha_a < 0$}}	
         edge from parent
             node[kant, below, pos=.6] {}
     } ;
@@ -254,14 +255,15 @@ int calucateQuotient(int a, int b){
 \begin{tikzpicture}[
     grow=down,
   baseline,
-  level distance=35mm,
   text depth=.1em,
   text height=.8em,
   scale = 1.5,
-  level 1/.style={sibling distance=10em},
-  level 2/.style={sibling distance=20em},
-  level 3/.style={sibling distance=41em},
-  level 4/.style={sibling distance=20em},
+  level 1/.style={sibling distance=10em, level distance=25mm},
+  level 2/.style={sibling distance=20em, level distance=35mm},
+  level 3/.style={sibling distance=41em, level distance=25mm},
+  level 4/.style={sibling distance=20em, level distance=25mm},
+  level 5/.style={sibling distance=20em, level distance=35mm},
+  level 6/.style={sibling distance=20em, level distance=25mm},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
