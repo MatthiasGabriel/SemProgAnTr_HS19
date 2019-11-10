@@ -3,7 +3,7 @@ Symbolic execution is method how to analyse a program. First researchs in this a
 
 Symbolic execution focuses on problems that can not be determined by static code analysis, because they require the execution of the program. In contradiction to a normal execution, for example in manual unit tests, random fuzzing or even actual user input, this analysis uses so called symbolic input.
 
-In contrast to a variable with a concrete value, for example 5, a variable with a symbolic value can have any value. This symbolic value will get certain restrictions during the execution of the program. During the execution of the program the execution engine will track all assigned variables. This collection of variables is called symbolic memory store and $\sigma$ will be used to denote it in mathematical terms.\cite{SurveySymExec-CSUR18}.
+In contrast to a variable with a concrete value, for example 5, a variable with a symbolic value can have any value. This symbolic value will get certain restrictions during the execution of the program. During the execution of the program the execution engine will track all assigned variables. This collection of variables is called symbolic memory store and $\sigma$ will be used to denote it in mathematical terms \cite{SurveySymExec-CSUR18}.
 Whenever a variable gets a new value, the variable and its value will be added to the memory store. If the variable is based on a variable with a symbolic value then the new variable will also get a symbolic value. If its based on a conrecte value then the concrete value itself will be stored.
 
 Consider the following example where the variables a and b are symbolic and the according values denoted with the symbols $\alpha_a$ and $\alpha_b$:
@@ -14,7 +14,7 @@ If we assign the value $1$ to the variable a $a = 1$ then the memory store will 
 $$\sigma = \{a\gets 1, b \gets \alpha_b, c \gets 2*\alpha_a\}$$
 
 
-Whenever a branching statement\footnote{For example the if-statement or switch-statement} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value in regard to the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ used to denote it\cite{SurveySymExec-CSUR18}.
+Whenever a branching statement\footnote{For example the if-statement or switch-statement} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value in regard to the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ used to denote it \cite{SurveySymExec-CSUR18}.
 Consider for example that a statement $if (a > 0)$ is the first statement of your code. Because this is a branching statement the execution engine has to calucate two different path constraints $\pi_{true}$ and $\pi_{false}$
 $$\pi_{true} = \alpha_a > 0$$
 $$\pi_{false} = \alpha_a <= 0$$
