@@ -93,6 +93,7 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
    return DPLLRecursive($F \cup \{\lnot l\}, \rho$)
 \end{algorithm}
 
+\begin{adjustbox}{width=\columnwidth}
 \begin{algorithm}[caption={UnitPropagate}, label={algUnitProgagate}]
  input: $F$: boolean formula in CNF-Form
 	$\rho$: assignment of variables
@@ -110,7 +111,7 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
    return $(F, \rho)$
  end
 \end{algorithm}
-\todo{rearrange UnitPropagate to not overlap}
+\end{adjustbox}
 \todo{maybe rewrite code to be less mathematic}
 \begin{algorithm}[caption={IsUnitClause}, label={algIsUnitClause}]
  input: $C$: CNF clause
