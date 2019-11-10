@@ -28,8 +28,6 @@ Random Path Selection organises the states in a binary tree, as visualised by th
 
 Coverage-Optimized Search is the second algorithm that is included in KLEE. As its name suggests it tries to maximize the coverage. It uses different heuristics to determine how probable it is to reach currently uncovered code in the next few steps. After that it randomly selects the branch based on this probability, prefering states with higher probability.
 To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner.
-
-\todo{add other search strategies that are not used in KLEE}
 \begin{figure}
 \begin{tikzpicture}[
     grow=down,
@@ -98,13 +96,35 @@ child {
 \label{fig:state_tree_probability}
 \end{figure}
 \subsubsection{Query optimization}
-\todo{describe constraint solving optimization and caching}
+Because KLEE sends many and very complex queries to STP the computation time of these queries takes a majority of time when executing an analysis. To reduce the computational time and thus be able to finish the analyis faster or at least cover more states in the same time different optimizations are applied before a query gets really solved by STP. 
+At the start of these optimizations KLEE tries to do arithmetic simplifications($5*\alpha_a + 2*(4-\alpha_a) = 3 * \alpha_a + 8$). These rewritings are always related to exactly one condition of the whole path condition or one variable entry in the memory.
+
+The second and third optimization exploit the additional information that arise from equality constraints. In the so called Constraint Set Simplification KLEE tries to simplify the whole path condition by replacing symbolic values if such a new equality constraint is added. Previous conditions can often be eliminated or at least simplified. 
+Assumme the following path condition $\pi = \{\alpha_a < 100, \alpha_b - \alpha_a< 20\}$. If a new constraint $\alpha_a = 10$ is added, the whole path condition can be simplified to $\pi = \{\alpha_a = 10, \underbrace{10 < 100}_{true},\underbrace{\alpha_b - 10 < 20}_{\alpha_b < 30}\}$. Instead of having three conditions with relations to each other, the optimization results in two simple conditions and true, which will be eliminated. Additionally the value of $\alpha_a$ in this and following states is actually always exactly $10$ and no longer a symbolic value even if it did not get assigned. This information can be used to update your memory ($\sigma$)
+
+So far the optimizations do simplifications to the path constraint. The next optimization, which is called Constraint Independence, goes further and tries to deliver only a partial set of constraint to STP. It does this by tracking the relations between the different variables. Assume that to our previous example a third condition $\alpha_c + \alpha_b > 50$ is added. The resulting path condition would therefore be $\pi = \{\alpha_a = 10, \alpha_b < 30, \alpha_c + \alpha_b > 50\}$. If the next statement is $assert(c != 20)$, the query to STP would try to negate this assertion condition. Because the condition is not related to $\alpha_a$ the first contraint can be dropped completely for this query. This does not do any modification to the state data, but optimises only one specific query.\footnote{Note how this constraint only can be dropped because with in second optimization $\alpha_a$ got removed from the second condition. Otherwise a relation would still exist.}
+
+The last and most complex optimization is called Counter-example Cache. In the cache each constraint set is saved together with a possible variable assignment if the query was successful, otherwise it will be marked as UNSAT. Before handing over a query to STP the cache is search for a related superset or subset.
+
+If a superset is found and this superset has a solution, the variable assignment has also to be satisfiable for the current condition set, because droping of constraints can never invalidate a solution.
+
+If a subset of the original query set is found and has no solution, this results in an unsatisiable solution aswell. When there's no solution that satisfies the less strict subset, there's no way that any variable assignment can satify the queried set, which contains all of the constraints of the subset and some additinal constraints.
+
+If a subset is found and has a satifisfiable assignment there is a good chance that this solution will also satisify the new constraint set. Because it is much cheaper to verify if a solution is valid for a specific constraint set, KLEE does exactly that and returns the solution. If the solution is not valid for the new constraint set a query to STP is necessary.
+
+The Counter-example Cache is especially powerful in combiniation with Constraint Independence because the queried contraint sets gets smaller and therefore hit the cache more often.
+
 In all this KLEE does literally nothing different than specified in the previous chapter \ref{section:symbolic_execution} and implementing a specific and efficient memory and state managment, query optimization with caching and different state schedulings. But there's an additional topic that is tackled by KLEE.
 \subsubsection{Dependency on environment}
 \todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
 
 
 \todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
+\todo{Cleanup}
+\subsection{Other approaches}
+\todo{add other search strategies that are not used in KLEE}
+\cite{SurveySymExec-CSUR18}
+
 \todo{Cleanup}
 What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
 What are the differences, advantages and disadvantages in relation to symbolic execution.
