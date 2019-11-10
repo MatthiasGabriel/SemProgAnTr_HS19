@@ -7,9 +7,26 @@ A SAT solver basically tries to find a solution, an assignment of all variables 
 
 As an example take the following formula as an input $A \land \lnot B$ there's only one variable assignment where the formula evaluates to true, namely A = true and B = false.
 
-An unsatisfiable example would be the following formula: $A \land \lnot B \land (\lnot A \lor B)$.  There's no possibility how to assign boolean values to A and B which lets the formula evaluate to true, therefore its unsatifable.\todo{Add a solution table}
+An unsatisfiable example would be the following formula: $A \land \lnot B \land (\lnot A \lor B)$.  There's no possibility how to assign boolean values to A and B which lets the formula evaluate to true as shown by table \ref{table:unsat_truth_table}, therefore its unsatifable.
+\begin{table}[!htbp]
+\begin{adjustbox}{width=\columnwidth}
+\begin{tabular}{ |c|c|c|c|c| } 
+ \hline
+ $A$ & $B$ & $\lnot B$ & $\lnot A \lor B$ & $A \land \lnot B \land (\lnot A \lor B)$ \\ 
+ \hline
+ True & True & \highlight{False} & True & False \\ 
+ True & False & True & \highlight{False} & False\\ 
+ \highlight{False} & True & \highlight{False} & True & False\\ 
+ \highlight{False} & False & True & True & False\\ 
 
-To simplify the task the formula has to meet certain criteria to be allowed as an input to a SAT solver. The most important criteria is that the formula has to be in the conjunctive normal form, in the further text only called CNF. 
+ \hline
+\end{tabular}
+\end{adjustbox}
+\caption{Truth table for the unsatisfiable example. The partial expressions that lead to the expression evaluating to false are highlighted.}
+\label{table:unsat_truth_table}
+\end{table}
+
+To simplify the task, the formula has to meet certain criteria to be allowed as an input to a SAT solver. The most important criteria is that the formula has to be in the conjunctive normal form, in the further text only called CNF. 
 
 In the following paragraph the rules of CNF will be explained together with some examples. The next paragraph shows that this restriction to CNF is not a big problem, because it's possible to transform any boolean formula into CNF\cite{Jackson:2004:CFC:2103144.2103160}.
 \subsubsection{CNF}
