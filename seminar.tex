@@ -13,13 +13,10 @@
 \usepackage[obeyFinal]{todonotes}
 
 %%%%%% OWN Pseudocode style
-\newcounter{nalg}[section]
-\renewcommand{\thenalg}{\thesection .\arabic{nalg}}
-\DeclareCaptionLabelFormat{algocaption}{Algorithm \thenalg}
+
 \lstnewenvironment{algorithm}[1][]
 {   
-    \refstepcounter{nalg}
-    \captionsetup{labelformat=algocaption,labelsep=colon}
+\renewcommand{\lstlistingname}{Algorithm}
     \lstset{
         mathescape=true,
         frame=tB,
@@ -36,13 +33,9 @@
 {}
 
 %%%%%% OWN Codesnippets
-\newcounter{ncode}[section]
-\renewcommand{\thencode}{\thesection .\arabic{ncode}}
-\DeclareCaptionLabelFormat{codecaption}{Codesnippet \thencode}
 \lstnewenvironment{codesnippet}[1][]
 {   
-    \refstepcounter{ncode}
-    \captionsetup{labelformat=codecaption,labelsep=colon}
+\renewcommand{\lstlistingname}{Codesnippet}
     \lstset{
         mathescape=true,
         frame=tB,
