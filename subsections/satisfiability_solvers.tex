@@ -62,7 +62,8 @@ If a CNF formula should evaluate to true and contains a unit clause the unit cla
 This property will be heavely used by the SAT solver.
 
 Consider the example clauses used above. In the clause $A$ the variable $A$ has to be true and in the other example $\lnot A$ the variable $A$ has to be false.
-\todo{binary clause}
+
+The binary clause contains exactly two literals. At a first glance this does not look very special at all, but binary clauses allow powerful optimizations. As soon as one of the two variables gets assigned it's possible to deduct the value of the other variable.
 \subsubsection{DPLL}
 
 There are many different methods how a SAT Formula can be solved. The most simplistic approach would be to just bruteforce the formula and try to evaluate the formula for every possible combination of variables. This works well for a small number of variables but does not scale, because the computation time increases exponentially. In this chapter the method of the DPLL Procedure will be presented. It is the basis for many of the currently used algorithms and fortunately not too hard to understand.
