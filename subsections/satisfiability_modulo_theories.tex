@@ -51,7 +51,7 @@ $$2(\underbrace{4y+2z}_{x})+ 4y + 2z = 0 \Mod{2^3} \Leftrightarrow 4y + 6z = 0\M
 There are no longer any ${a_i}$ in these equations, that have an $gcd(a_i,2^3) = 1$ and therefore no further variable can be isolated.
 
 The algorithm then searches the coefficent $a_i$ which is the smallest in the whole system and chooses the corresponding equation.
-After the smallest $a_i$ is choosen the whole system is devided by it and the bit with the highest order is dropped.\todo{maybe rewrite to multiple of bits}
+After the smallest $a_i$ is choosen the whole system is devided by it and the $\log_{2}(a_i)$ highest bits are dropped.
 
 A whole new equation system is formed with linear vectors length $b-1$, in the example two.
 The new variables are named $y[1:0]$ and $z[1:0]$ to signal that they represent the bits 1 to 0 of the regarding variable.
