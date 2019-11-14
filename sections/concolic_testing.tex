@@ -135,5 +135,7 @@ Executing testcases which use a symbolic model is not trivial, because the envir
 In addition to testing a program, KLEE can also be used to reason about the equivalence of two implementations. Assume two functions $f(x)$ and $f'(x)$ that someone states as equal. With a simple assert statement $assert(f(x) == f'(x))$ where $x$ is a symbolic input, KLEE will execute try to find an assignment such that $f(x) != f'(x)$. If any assignment is found the symbolic variable will be concretised otherwise it's proven that the two functions are equivalent. Note however that this requires KLEE to be able to evaluate all possible states of $f(x)$ and $f'(x)$ without exceeding the specified timelimit.
 \todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
 \subsection{Other approaches}
+In this chapter I want to discuss different search strategies discussed in \cite{SurveySymExec-CSUR18}
+* Dynamic Symbolic Execution -> Use a concrete input to "drive" the execution and after completion try to modifiy the concrete input by changing it based on the conditions. \cite{Godefroid:2005:DDA:1064978.1065036}
+* SelectiveSymbolicExecution -> Execute only parts of the program symbolically. Other parts(for example subroutines, etc) are executed conretely. This can have big impacts on the soundness and completeness. \cite{Chipounov:2012:SPD:2110356.2110358}
 \todo{add other search strategies that are not used in KLEE}
-\cite{SurveySymExec-CSUR18}
