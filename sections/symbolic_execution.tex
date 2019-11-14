@@ -113,7 +113,7 @@ int calculateMagicNumber(int a, int b){
 	        }
 		 child {
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b < 0} \Leftrightarrow \text{not satisfiable}$
+		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b < 0} \Leftrightarrow \text{UNSAT}$
 		        }
 		        edge from parent
 		            node[kant, below, pos=.5] {$\alpha_b<0$}}
@@ -129,7 +129,7 @@ int calculateMagicNumber(int a, int b){
 		        }
 			  child {
 			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-				\textbf{$\highlight{\alpha_a+1 = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow false$}
+				$\highlight{\alpha_a+1 = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow \text{UNSAT}$
 			        }
 		        edge from parent
 		            node[kant, below, pos=.5] {}}
@@ -171,7 +171,7 @@ int calculateMagicNumber(int a, int b){
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\highlight{(\alpha_a+1)*\alpha_b  = 0} \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow false$}
+		$\highlight{(\alpha_a+1)*\alpha_b  = 0} \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow \text{UNSAT}$
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
@@ -191,7 +191,7 @@ int calculateMagicNumber(int a, int b){
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\highlight{\alpha_a  = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow true$}
+		$\highlight{\alpha_a  = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow \text{SAT}$
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
@@ -223,7 +223,7 @@ child {
 	        }
 	 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\highlight{\alpha_a * -1 = 0} \land \alpha_a<0 \Leftrightarrow false$}
+		$\highlight{\alpha_a * -1 = 0} \land \alpha_a<0 \Leftrightarrow \text{UNSAT}$
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
