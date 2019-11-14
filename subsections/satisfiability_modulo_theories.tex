@@ -9,7 +9,7 @@ As an input STP allows the following operations, which can be grouped in the fol
 \item \textbf{mathematic operations} Left and right shifts, addition, multiplication, unary minus, division, modulo, relational operators
 \item \textbf{others} Array read, array write,  extraction of bit-vectors\footnote{$x[i:j]$ is the extraction of the bytes between $i$ and $j$ of $x$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}, concatenation of bit-vectors\footnote{The concatenation of two bit-vectors $x_{[n]}$ and $y_{[m]}$ is expressed as $x \circ y$ and returns a new vector $z_{[m+n]}$ of length $m+n$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}
 \end{itemize}
-STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem, before it will be converted into conjunctive normal form and solved by a SAT solver. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
+STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem, before it will be converted into conjunctive normal form and solved by a SAT solver\footnote{As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used.}. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
 
 \todo{add some more content about the "architecture" / flow of STP}
 \todo{add more content about the general working of STP, especially the array refinement}
@@ -72,11 +72,3 @@ $$\Leftrightarrow z[1:0]=6  \Mod{4}  \mid \text{normalize to mod4}$$
 $$\Leftrightarrow z[1:0]=2  \Mod{4}$$
 Because a solution was found it can be concluded that the original equation system is satisfiable.
 The original system can be transformed into $$(x = 4y + 6z) \land (y[1 : 0] = 2z[1 : 0] + 3) \land (z[1 : 0] = 2)$$ and forwarded to the SAT solver.
-
-How SMT solvers work in comparison to SAT solvers.\todo{cleanup}
-Especially how the STP \cite{Ganesh:2007:DPB:1770351.1770421} (used in KLEE and other tools) works.
-Basically by transforming the input and solve the result of the transformation, if neccessary, with a SAT solver.
-Description of Bit-Vector Arithmentic used in the on-the-fly solver \cite{10.1007/978-3-540-71209-1_28}
-STP uses many different algorithms to optimize the formula. In the next section two of these optimizations are described, as an example.
-on-the-fly solver for mod-2n linear arithmetic
-abstraction refinement heuristics for array expressions 

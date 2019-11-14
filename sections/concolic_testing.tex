@@ -130,17 +130,8 @@ Note that it is no longer required to compile the program to LLVM. This has addi
 
 Executing testcases which use a symbolic model is not trivial, because the environment has to be setup to reflect the symbolic model. Before executing the program KLEE creates the required files, directories, etc and calls the program with the new concrete file locations. Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and do not execute the system call at all.
 
+\subsubsection{Software Equivalence}
 \todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
-\todo{Cleanup}
 \subsection{Other approaches}
 \todo{add other search strategies that are not used in KLEE}
 \cite{SurveySymExec-CSUR18}
-
-\todo{Cleanup}
-What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
-What are the differences, advantages and disadvantages in relation to symbolic execution.
-\cite{Cadar:2006:EAG:1180405.1180445}
-\cite{Cadar:2008:KUA:1855741.1855756}
-\cite{Cadar:2013:SES:2408776.2408795}
-\cite{Godefroid:2005:DDA:1064978.1065036}
-\cite{Godefroid:2012:SWF:2090147.2094081}

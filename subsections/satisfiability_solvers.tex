@@ -1,8 +1,4 @@
 \subsection{Satisfiability Solvers}
-How SAT solvers work and what its limits are.
-This publication will only describe the most relevant features without going into depth about all the possible optimizations that are currently used.
-As a source the paper of the SAT used in STP \cite{10.1007/978-3-540-24605-3_37} could be used. Additionally \cite{Gomes2008SatisfiabilityS} can be used as an alternative\todo{ cleanup and cite properly}
-
 A SAT solver basically tries to find a solution, an assignment of all variables so that the formula is true, to a specified boolean formula. All modern SAT Solvers additionally return a specific assignment if possible or otherwise specify that the formula is not satisfiable.
 
 As an example take the following formula as an input $A \land \lnot B$ there's only one variable assignment where the formula evaluates to true, namely A = true and B = false.
