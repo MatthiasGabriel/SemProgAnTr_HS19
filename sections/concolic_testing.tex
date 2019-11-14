@@ -10,6 +10,7 @@ If the statement needs a modification of $\sigma$, the instruction gets mapped i
 
 If it is a branching statement, $\pi_{true}$ as well as $\pi_{false}$ are calculated. A duplication of the current state takes place after the two $\pi$ are checked for feasability in combination with the current path condition.
 
+This process continues until all branches are processed or a defined timer is reached. In smaller applications it's still possible to reach all possible states and therefore reach completeness. In more complex applications it's required to optimize the scheduling \ref{section:state_scheduling} to reach the best possible coverage of states before the timer hits the defined limit.
 \subsubsection{Approach for dangerous operations}
 In addition to branching statements each potentially dangerous operation, such as pointer dereferencing or division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation. This state never has a subtree attached. If the path condition is infeasable the execution stops automatically, before the branching actually takes place. However if it's feasable, an error is raised resulting in the cancelation of this subtree. On the other branch the negative of the condition is added to prevent the error in this state and to be able to continue the analysis of the program.
 
@@ -18,16 +19,15 @@ The only special case of these dangerous operations are loading and storing oper
 \subsubsection{State management}
 As there are many states created and even hold during the execution, KLEE tries to minimize both the creation time of a new state as well as the memory footprint. It does this by taking advantage of the big redundancy that these states have, because they are often related and only differ in some of their properties. To be able to use this redundancy KLEE treats all memory objects as immutable and thus can reuse them as often as required. The consequence of this property is that whenever an object has to be modified it needs to be copied. This process is also called copy-on-write.
 
-\subsubsection{State scheduling}
+\subsubsection{State scheduling}\label{section:state_scheduling}
 Even if the states are very slim and efficiently created depending on the order of the computation the computation engine could be blocked by a single loop, leading to starvation of other states. Assume a very simplistic depth-first approach that first creates the two related states on every branching condition and after that processes the state that fulfills the branching condition. In the example with a loop\ref{fig:sym_tree_loop} the engine would always process the left child and no output would be generated at all\footnote{State C and State G would be constructed but never analyzed and therefore no return statement would be reached.}.
 
 To prevent this, KLEE implements two different kinds of scheduling algorithms. 
 
 Random Path Selection organises the states in a binary tree, as visualised by the previous examples, but instead of just going depth-first at the current path, the algorithm randomly selects which path to go when traversing the tree. After each execution of a state the traversing starts at the top again and thus favors unprocessed states that are higher up in the tree as visualized in figure \ref{fig:state_tree_probability}. Because of this, starvation of states is no longer possible. A nice side effect of this selection is, that the conditions in higher states are smaller and therefore the processing takes less effort.
 
-
 Coverage-Optimized Search is the second algorithm that is included in KLEE. As its name suggests, it tries to maximize the coverage. It uses different heuristics to determine how probable it is to reach currently uncovered code in the next few steps. After that it randomly selects the branch based on this probability, preferring states with higher probability.
-To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner.
+To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner\footnote{Note that the scheduling is very much dependent on the analysed software. It's possible that another scheduling algorithm delivers better results for a specific program. For that reason KLEE allows other state scheduling mechanisms to be used.}.
 \begin{figure}
 \begin{tikzpicture}[
     grow=down,
@@ -116,6 +116,20 @@ The Counter-example Cache is especially powerful in combiniation with Constraint
 
 In all this KLEE does nothing different than specified in the previous chapter \ref{section:symbolic_execution} and implements a specific and efficient memory and state managment, query optimization with caching and different state schedulings. But there's an additional topic that is tackled by KLEE.
 \subsubsection{Dependency on environment}
+Another problem of symbolic execution is the dependency on the environment as discussed in chapter \label{section:symbolic_restrictions}. KLEE tries to loosen the limitations by introducing so called Environment Modeling. The idea behind these models is that they substitute the real environment against one that is aware of the symbolic input values. 
+This model needs to be able to accept a symbolic value and produce every possible value from it. Additionally it needs to be aware of the previous modification that the program made on this model.
+
+During the execution of KLEE these models will be injected based on the call that was made to the environment. These models are non trivial to write and require deep knowledge of the original function as they need to to behave like it. KLEE already includes a complete model for a symbolic file system and many different system calls like open, read, write, that operate on this model.
+The filesystem model continues to opitimize concrete calls and calls the original function on the real file system if the call contains only concrete arguments. Only when a symbolic value is passed as an argument the related model will be called.
+
+
+
+
+
+
+
+
+
 \todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
 
 
