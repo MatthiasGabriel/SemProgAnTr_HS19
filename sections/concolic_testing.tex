@@ -6,10 +6,12 @@ On the basis of KLEE \cite{Cadar:2008:KUA:1855741.1855756} one possible approach
 KLEE only works on programs that are first compiled into the LLVM, an assembly language. This is normally done by using the compiler Clang\footnote{Clang is currently able to compile C, C++  and Objective-C programs into LLVM.}. 
 Each of the states that we saw in the previous examples \ref{fig:sym_example_one} and \ref{fig:sym_tree_loop} has the properties $\sigma$, now called heap, and $\pi$, which is called path condition. Additionally each state has a register file, a stack and an instruction pointer. Based on the current instruction that is processed, KLEE either modifies $\sigma$ or $\pi$ as we saw in the previous chapters.
 
-If the statement needs a modification of $\sigma$, the instruction gets mapped into an identitcal symbolic instruction. For most instructions the symbolic execution is trivial. For example the result of an addition of two symbolic values is just the addition of the two values.\todo{add example}\todo{non trivial instructions} Note however that KLEE executes the operation directly if all input values are concrete and therefore assigns a new concrete value to the variable.
+If the statement needs a modification of $\sigma$, the instruction gets mapped into an identitcal symbolic instruction. For most instructions the symbolic execution is trivial. For example the result of an addition of two symbolic values is just the addition of the two values and will not get simplified during the operation.\todo{non trivial instructions} Note however that KLEE executes the operation directly if all input values are concrete and therefore assigns a new concrete value to the variable.
+Assume the current variable assignments $a = 5$, $\b = \alpha_b$ and $c=\alpha_c$. If the statement $a = a + 10$ gets executed, the value of $5 + 10$ has to be calculated and leads to $a = 15$, however the statement $b = b + c$ leads to $b = \alpha_b + \alpha_c$
 
 If it is a branching statement, $\pi_{true}$ as well as $\pi_{false}$ are calculated. A duplication of the current state takes place after the two $\pi$ are checked for feasability in combination with the current path condition.
 
+This process continues until all branches are processed or a defined timer is reached. In smaller applications it's still possible to reach all possible states and therefore reach completeness. In more complex applications it's required to optimize the scheduling \ref{section:state_scheduling} to reach the best possible coverage of states before the timer hits the defined limit.
 \subsubsection{Approach for dangerous operations}
 In addition to branching statements each potentially dangerous operation, such as pointer dereferencing or division, generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, that results in an invalid operation. This state never has a subtree attached. If the path condition is infeasable the execution stops automatically, before the branching actually takes place. However if it's feasable, an error is raised resulting in the cancelation of this subtree. On the other branch the negative of the condition is added to prevent the error in this state and to be able to continue the analysis of the program.
 
@@ -18,16 +20,15 @@ The only special case of these dangerous operations are loading and storing oper
 \subsubsection{State management}
 As there are many states created and even hold during the execution, KLEE tries to minimize both the creation time of a new state as well as the memory footprint. It does this by taking advantage of the big redundancy that these states have, because they are often related and only differ in some of their properties. To be able to use this redundancy KLEE treats all memory objects as immutable and thus can reuse them as often as required. The consequence of this property is that whenever an object has to be modified it needs to be copied. This process is also called copy-on-write.
 
-\subsubsection{State scheduling}
+\subsubsection{State scheduling}\label{section:state_scheduling}
 Even if the states are very slim and efficiently created depending on the order of the computation the computation engine could be blocked by a single loop, leading to starvation of other states. Assume a very simplistic depth-first approach that first creates the two related states on every branching condition and after that processes the state that fulfills the branching condition. In the example with a loop\ref{fig:sym_tree_loop} the engine would always process the left child and no output would be generated at all\footnote{State C and State G would be constructed but never analyzed and therefore no return statement would be reached.}.
 
 To prevent this, KLEE implements two different kinds of scheduling algorithms. 
 
 Random Path Selection organises the states in a binary tree, as visualised by the previous examples, but instead of just going depth-first at the current path, the algorithm randomly selects which path to go when traversing the tree. After each execution of a state the traversing starts at the top again and thus favors unprocessed states that are higher up in the tree as visualized in figure \ref{fig:state_tree_probability}. Because of this, starvation of states is no longer possible. A nice side effect of this selection is, that the conditions in higher states are smaller and therefore the processing takes less effort.
 
-
 Coverage-Optimized Search is the second algorithm that is included in KLEE. As its name suggests, it tries to maximize the coverage. It uses different heuristics to determine how probable it is to reach currently uncovered code in the next few steps. After that it randomly selects the branch based on this probability, preferring states with higher probability.
-To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner.
+To benefit from the positive features of both algorithm KLEE normally uses them in round-robin manner\footnote{Note that the scheduling is very much dependent on the analysed software. It's possible that another scheduling algorithm delivers better results for a specific program. For that reason KLEE allows other state scheduling mechanisms to be used.}.
 \begin{figure}
 \begin{tikzpicture}[
     grow=down,
@@ -116,20 +117,25 @@ The Counter-example Cache is especially powerful in combiniation with Constraint
 
 In all this KLEE does nothing different than specified in the previous chapter \ref{section:symbolic_execution} and implements a specific and efficient memory and state managment, query optimization with caching and different state schedulings. But there's an additional topic that is tackled by KLEE.
 \subsubsection{Dependency on environment}
-\todo{describe file system "mock"} \todo{describe that testcases are generated which can be used to execute to original code}
+Another problem of symbolic execution is the dependency on the environment as discussed in chapter \ref{section:symbolic_restrictions}. KLEE tries to loosen the limitations by introducing so called Environment Modeling. The idea behind these models is that they substitute the real environment against one that is aware of the symbolic input values. 
+This model needs to be able to accept a symbolic value and produce every possible value from it. Additionally it needs to be aware of the previous modification that the program made on this model, but it's important that the modifications only affect the model in subsequent states. 
 
+During the execution of KLEE these models will be injected based on the call that was made to the environment. These models are non trivial to write and require deep knowledge of the original function as they need to to behave like it. KLEE already includes a complete model for a symbolic file system and many different system calls like open, read, write, that operate on this model.
+The filesystem model opitimizes concrete calls by dispatching it to the original function on the real file system if the call contains only concrete arguments. Only when a symbolic value is passed as an argument the related model will be called. It's required to specify the number and size of symbolic files separately when starting a KLEE-analysis, so that KLEE is able to allocate the files in the model and point the corresponding variable to the correct file.
 
+At default settings KLEE's file system model does produce environmental failures such as disk full. However it's possible to simulate such failures, based on the requirements for the program. By offering such an option it's in the hands of the user to choose either more completeness or less computations. The same method can be applied to any model by only handling the cases which the user of KLEE want's to check. However he should always remember that by simplifying the model some of the completeness of the analysis vanishs.
+
+\subsubsection{Testcases}
+Whenever a state reaches the end of the program or an error is detected, KLEE generates a testcase. This is done by querying STP for a concrete assignment for all symbolic values under the current path condition. If the program is deterministic an execution of the original program with these concrete values will behave exactly as the symbolic execution with this path condition.
+Note that it is no longer required to compile the program to LLVM. This has additional benefits, such as it's easy to measure coverage by using standard tooling such as gcov, or that it is easy to prove that a certain input triggers an error. To prove this a special setup is no longer required, the program has just to be run with the appropriate values.
+
+Executing testcases which use a symbolic model is not trivial, because the environment has to be setup to reflect the symbolic model. Before executing the program KLEE creates the required files, directories, etc and calls the program with the new concrete file locations. Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and do not execute the system call at all.
+
+\subsubsection{Software Equivalence}
+In addition to testing a program, KLEE can also be used to reason about the equivalence of two implementations. Assume two functions $f(x)$ and $f'(x)$ that someone states as equal. With a simple assert statement $assert(f(x) == f'(x))$ where $x$ is a symbolic input, KLEE will execute try to find an assignment such that $f(x) != f'(x)$. If any assignment is found the symbolic variable will be concretised otherwise it's proven that the two functions are equivalent. Note however that this requires KLEE to be able to evaluate all possible states of $f(x)$ and $f'(x)$ without exceeding the specified timelimit.
 \todo{maybe add tool equivalence, but it is in my opinion a rarely used scenario}
-\todo{Cleanup}
 \subsection{Other approaches}
+In this chapter I want to discuss different search strategies discussed in \cite{SurveySymExec-CSUR18}
+* Dynamic Symbolic Execution -> Use a concrete input to "drive" the execution and after completion try to modifiy the concrete input by changing it based on the conditions. \cite{Godefroid:2005:DDA:1064978.1065036}
+* SelectiveSymbolicExecution -> Execute only parts of the program symbolically. Other parts(for example subroutines, etc) are executed conretely. This can have big impacts on the soundness and completeness. \cite{Chipounov:2012:SPD:2110356.2110358}
 \todo{add other search strategies that are not used in KLEE}
-\cite{SurveySymExec-CSUR18}
-
-\todo{Cleanup}
-What is concolic testing? How does concolic testing work? Why do we need concolic execution? What "problems" and limits of symbolic execution does it solve and what are the new limitations that arise?
-What are the differences, advantages and disadvantages in relation to symbolic execution.
-\cite{Cadar:2006:EAG:1180405.1180445}
-\cite{Cadar:2008:KUA:1855741.1855756}
-\cite{Cadar:2013:SES:2408776.2408795}
-\cite{Godefroid:2005:DDA:1064978.1065036}
-\cite{Godefroid:2012:SWF:2090147.2094081}
