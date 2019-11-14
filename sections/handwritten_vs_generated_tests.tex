@@ -1,4 +1,8 @@
 \section{Handwritten vs generated tests}
+Even though concolic testing is generating very high coverage in quite a short time, in my opinion it does not superseed handwritten tests, butit can be a great addition to another testsuite. 
+Even with the possibly to test that the functionality of two functions is exactly the same as we saw in section \ref{section_symbolic_equivalence} it's still not possible to automatically test that the functionality of a function behaves as we'd expect.
+
+In relation to handwritten tests, concolic execution is able to test nearly every possible path in a program and therefore it is very powerful in detecting illegal operations such as division by zero, invalid array access, etc, in the code. It is even possible to deliver concrete values which let the program fail. In my opinion a new testcase for these concrete values should be added to the handwritten testsuite and after that the programming error can be fixed. It is even possible that the input is not allowed in the program and an additional condition 
 \todo{Its not possible to test for functionality}
 \todo{Its great to test if all possible input is handled correctly}
 \todo{Good coverage in short time}
