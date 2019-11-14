@@ -46,8 +46,12 @@ $$\Leftrightarrow 3x=4y+6z  \Mod{2^3}  \mid \text{multiple with 3}$$
 $$\Leftrightarrow x=12y+18z \Mod{2^3}  \mid \text{normalize to mod8}$$
 $$\Leftrightarrow x=4y+2z \Mod{2^3}$$
 After $x$ is isolated, it's possible to substitute each $x$ in the original equation system with $4y+2z$ and normalize to$\Mod{2^3}$
+\[\resizebox{\columnwidth}{!}{$\displaystyle
 $$2(\underbrace{4y+2z}_{x})+2y+2=0 \Mod{2^3} \Leftrightarrow 2y + 4z + 2 = 0\Mod{2^3} $$
+$}\]
+\[\resizebox{\columnwidth}{!}{$\displaystyle
 $$2(\underbrace{4y+2z}_{x})+ 4y + 2z = 0 \Mod{2^3} \Leftrightarrow 4y + 6z = 0\Mod{2^3} $$
+$}\]
 There are no longer any ${a_i}$ in these equations, that have an $gcd(a_i,2^3) = 1$ and therefore no further variable can be isolated.
 
 The algorithm then searches the coefficent $a_i$ which is the smallest in the whole system and chooses the corresponding equation.
@@ -59,10 +63,14 @@ $$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2}$$
 $$2y[1 : 0] + 3z[1 : 0] = 0\Mod{2^2}$$
 Now the first step of isolation a variable $x_i$ with a coefficient $gcd(a_i, 2^b)=1$ is repeated.
 $$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2}\mid \text{isolate y[1:0]}$$
+\[\resizebox{\columnwidth}{!}{$\displaystyle
 $$\Leftrightarrow y[1 : 0] = -2z[1 : 0] -1 \Mod{2^2} \mid \text{normalize to mod4}$$
+$}\]
 $$\Leftrightarrow y[1 : 0] = 2z[1 : 0] +3 \Mod{2^2}$$
 After isolating $y[1 : 0] $ it's allowed to substitute each $y[1 : 0] $ in the original equation system with $2z[1:0]+3$
+\[\resizebox{\columnwidth}{!}{$\displaystyle
 $$2(\underbrace{2z[1:0]+3}_{y[1:0]}) + 3z[1 : 0] = 0\Mod{2^2} \mid \text{normalize to mod4}$$
+$}\]
 $$\Leftrightarrow 3z[1:0] + 2 = 0 \Mod{2^2}$$
 In the last iteration $z[1:0]$ will be isolated because the $gcd(3,2^2) = 1$. The inverse of 3 in$\mod{2^2}$ is 3.
 $$3z[1:0] + 2 = 0 \Mod{2^2} \mid \text{isolate 3z[1:0]}$$
