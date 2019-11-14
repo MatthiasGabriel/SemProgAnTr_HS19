@@ -113,7 +113,7 @@ int calculateMagicNumber(int a, int b){
 	        }
 		 child {
 		        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \alpha_b < 0 \Leftrightarrow \text{not satisfiable}$
+		            $\pi =  \alpha_a \geq 0 \land \alpha_b > 0 \land \highlight{\alpha_b < 0} \Leftrightarrow \text{not satisfiable}$
 		        }
 		        edge from parent
 		            node[kant, below, pos=.5] {$\alpha_b<0$}}
@@ -129,7 +129,7 @@ int calculateMagicNumber(int a, int b){
 		        }
 			  child {
 			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-				\textbf{$\alpha_a+1 = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow false$}
+				\textbf{$\highlight{\alpha_a+1 = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \land \alpha_b \geq 0 \Leftrightarrow false$}
 			        }
 		        edge from parent
 		            node[kant, below, pos=.5] {}}
@@ -171,7 +171,7 @@ int calculateMagicNumber(int a, int b){
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$(\alpha_a+1)*\alpha_b  = 0 \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow false$}
+		\textbf{$\highlight{(\alpha_a+1)*\alpha_b  = 0} \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow false$}
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
@@ -191,7 +191,7 @@ int calculateMagicNumber(int a, int b){
         }
         child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow true$}
+		\textbf{$\highlight{\alpha_a  = 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b \geq 0 \Leftrightarrow true$}
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
@@ -223,7 +223,7 @@ child {
 	        }
 	 child {
 	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-		\textbf{$\alpha_a * -1 = 0 \land \alpha_a<0 \Leftrightarrow false$}
+		\textbf{$\highlight{\alpha_a * -1 = 0} \land \alpha_a<0 \Leftrightarrow false$}
 	        }
         edge from parent
             node[kant, below, pos=.5] {}}
@@ -240,7 +240,7 @@ child {
 \caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}}
 \label{fig:sym_example_one}
 \end{figure*}
-\todo{Add highlighting to assert step. Add last statement to tree}
+\todo{Add branching states on assert}
 
 Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria. Amongst other things the number $b$ is devided by a mutated $a$. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by zero and therefore an error state of the program.
 
