@@ -6,7 +6,6 @@ In relation to handwritten tests, concolic execution is able to test nearly ever
 
 In my opinion a new testcase for these concrete values should be added to the handwritten testsuite and after that the programming error can be fixed. It is possible that the input is not allowed in the program and an additional input constraint is defined. In such a manner an unexpected and unhandled error case can be converted into a handled exception case.
 
-\todo{sum code with index overflow}
 \begin{codesnippet}[caption={Sum with index overflow}, label={codeSnippet:sum_indexoverflow}]
 int sum(int summands[], int size){
    int sum = 0;
