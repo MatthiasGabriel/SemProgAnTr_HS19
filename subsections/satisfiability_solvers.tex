@@ -98,7 +98,7 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
 	$\rho$:updated assignment of variables
  begin
    while $\Lambda \notin F$ and $\exists xClause \in F: IsUnitClause(xClause)$
-	$\exists! xLiteral \in xClause$
+	$\exists xLiteral \in xClause$
 	while $\exists yClause \in F: xLiteral \in yClause$
 		$F \gets F \setminus \{yClause\}$     
 	while $\exists zClause \in F: \lnot xLiteral \in zClause$

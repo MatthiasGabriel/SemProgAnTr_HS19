@@ -297,7 +297,6 @@ child {
 \caption{Partial symbolic execution tree related to codesnippet \ref{codeSnippet:symbolicExecution}. This is an addition to figure \ref{fig:sym_example_one}.}
 \label{fig:sym_tree_last_states}
 \end{figure}
-\todo{Add branching states on assert}
 
 Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria. Amongst other things the number $b$ is devided by a mutated $a$. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by zero and therefore an error state of the program.
 
