@@ -248,8 +248,8 @@ child {
   text depth=.1em,
   text height=.8em,
   scale = 1.5,
-  level 1/.style={sibling distance=20em, level distance=50mm},
-  level 2/.style={sibling distance=20em, level distance=20mm},
+  level 1/.style={sibling distance=20em, level distance=40mm},
+  level 2/.style={sibling distance=20em, level distance=40mm},
     edge from parent/.style={very thick,draw=blue!40!black!60,
         shorten >=5pt, shorten <=5pt},
     edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
@@ -280,10 +280,16 @@ child {
         }
         child {
         node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
-			$return \text{ } \frac{\alpha_b}{(\alpha_a+1)*\alpha_b}$
+			$return \text{ } \alpha_b / ((\alpha_a+1)*\alpha_b)$
         }
         edge from parent
-            node[kant, below, pos=.5] {}}		
+            node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b != 0$}}	
+	 child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+			$\highlight{(\alpha_a+1)*\alpha_b =0} \land (\alpha_a+1)*\alpha_b  != 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0  \Leftrightarrow \text{UNSAT}$
+        }
+        edge from parent
+            node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b =0$}}
         edge from parent
             node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b  != 0$}}
 child {
@@ -294,7 +300,7 @@ child {
             node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b  = 0$}} ;
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Partial symbolic execution tree related to codesnippet \ref{codeSnippet:symbolicExecution}. This is an addition to figure \ref{fig:sym_example_one}.}
+\caption{Partial symbolic execution tree related to codesnippet \ref{codeSnippet:symbolicExecution}. This is an addition to figure \ref{fig:sym_example_one}. Note that the branching after State M happens automatically, because a potentially dangerous operation was detected as discussed in section \ref{section:dangerous_operations}.}
 \label{fig:sym_tree_last_states}
 \end{figure}
 
