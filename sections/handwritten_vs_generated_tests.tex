@@ -8,7 +8,7 @@ In my opinion a new testcase for these concrete values should be added to the ha
 
 \todo{sum code with index overflow}
 \begin{codesnippet}[caption={Sum with index overflow}, label={codeSnippet:sum_indexoverflow}]
-int sum(int[] summands, int size){
+int sum(int summands[], int size){
    int sum = 0;
    for(int i = 0; i<=size;i++){
       sum += summands[i];
@@ -17,7 +17,7 @@ int sum(int[] summands, int size){
 }
 \end{codesnippet}
 \begin{codesnippet}[caption={Sum with index "underflow"}, label={codeSnippet:sum_indexunderflow}]
-int sum(int[] summands, int size){
+int sum(int summands[], int size){
    int sum = 0;
    for(int i = 1; i<size;i++){
       sum += summands[i];
@@ -26,12 +26,3 @@ int sum(int[] summands, int size){
 }
 \end{codesnippet}
 Imagine the following code displayed in codesnippet \ref{codeSnippet:sum_indexoverflow} which sums up all the input. The code clearly has an index overflow problem and symbolic execution will generate an error test case. However image the code from codesnippet \ref{codeSnippet:sum_indexunderflow}, which also has an index problem, but it "only" ignores the first number. It is not possible to find this error with symbolic execution. A handwritten test is required that states which output should be generated for a specific input.
-
-\todo{Its not possible to test for functionality}
-\todo{Its great to test if all possible input is handled correctly}
-\todo{Good coverage in short time}
-\todo{Generated input can be used to extend the manual test suite}
-\todo{write example where a basic handwritten test could've prevented an error which is not detectable by a concolic engine}
-\todo{cleanup}
-In this section I want show where the generated tests have their (practical) limit and it's advantages/disadvantages in relation to handwritten tests.
-I want to show that the generated tests are (only) a complement to the handwritten tests, because they can cover many different paths. But they can only reason about certain programming errors. For example they are useful to detect faulty index access, pointer dereferences or calls of the wrong property in dynamically typed languages. Nevertheless they have no possibility to reason if the output of a program for a specific input is correct or not.
