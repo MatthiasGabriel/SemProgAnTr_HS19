@@ -237,9 +237,107 @@ child {
 
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}}
+\caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}. For presentational reasons the tree skips the last two states after each assertion state, where the result is calculated and returned.}
 \label{fig:sym_example_one}
 \end{figure*}
+\begin {figure}
+\begin{adjustbox}{width=\columnwidth}
+\begin{tikzpicture}[
+    grow=down,
+  baseline,
+  text depth=.1em,
+  text height=.8em,
+  scale = 1.5,
+  level 1/.style={sibling distance=20em, level distance=50mm},
+    edge from parent/.style={very thick,draw=blue!40!black!60,
+        shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.south) -- (\tikzchildnode.north)},
+    kant/.style={text width=2cm, text centered, sloped},
+    every node/.style={text ragged, inner sep=2mm},
+    punkt/.style={rectangle, rounded corners, shade, top color=white,
+    bottom color=blue!50!black!20, draw=blue!40!black!60, very
+    thick }
+    ]
+\node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State I}
+                  \nodepart{second}
+		            $\sigma = \{\highlight{a\gets (\alpha_a+1)*\alpha_b} , b \gets \alpha_b,x\gets 1\}$
+		\nodepart{third}
+			$\pi = \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+		\nodepart{fourth}
+			Line 13: $assert(a!=0)$
+        }
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State M}
+                  \nodepart{second}
+		            $\sigma = \{a\gets (\alpha_a+1)*\alpha_b , b \gets \alpha_b,x\gets 1\}$
+		\nodepart{third}
+			$\pi = \highlight{(\alpha_a+1)*\alpha_b  != 0} \land \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0$
+		\nodepart{fourth}
+			Line 13: $return \text{ } b / a$
+        }
+        child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+			$return \text{ } \alpha_b \ (\alpha_a+1)*\alpha_b$
+        }
+	 child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+			\textbf{State F}
+	           \nodepart{second}
+		            $\sigma = \{a\gets \alpha_a - \alpha_b, b \gets \alpha_b,\highlight{q\gets 1}\}$
+		\nodepart{third}
+			$\pi =  \alpha_a \geq \alpha_b$
+		\nodepart{fourth}
+			Line 3: $while(a>=b)$
+	        }
+		 child {
+        			node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State H}
+	                     \nodepart{second}
+		          		$\sigma = \{a\gets \alpha_a-\alpha_b , b \gets \alpha_b,q\gets 0\}$
+			\nodepart{third}
+				$\pi = \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b \geq \alpha_b} $
+			\nodepart{fourth}
+				Line 4: $a = a -b$
+		        }
+		        edge from parent
+		            node[kant, below, pos=.5] {$\alpha_a-\alpha_b \geq \alpha_b$}}
+ 		child {
+	        		node[punkt] [rectangle split, rectangle split, rectangle split parts=4, text ragged] {
+				\textbf{State G}
+	                  	\nodepart{second}
+	            		$\sigma = \{a\gets \alpha_a , b \gets \alpha_b,q\gets 1\}$
+			\nodepart{third}
+				$\pi =  \alpha_a \geq \alpha_b \land \highlight{\alpha_a-\alpha_b < \alpha_b}$
+			\nodepart{fourth}
+				Line 7: $return \text{ } q$
+	       		 }
+			  child {
+			        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+					\textbf{$return \text{ } 1$}
+			        }
+		        edge from parent
+		            node[kant, below, pos=.5] {}}
+		        edge from parent
+		            node[kant, below, pos=.5] {$b \geq 0$}}
+	        edge from parent
+	            node[kant, below, pos=.5] {}}
+        edge from parent
+            node[kant, below, pos=.5] {}}		
+        edge from parent
+            node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b  != 0$}}
+child {
+	        node[punkt] [rectangle split, rectangle split, rectangle split parts=1, text ragged] {
+		$\highlight{(\alpha_a+1)*\alpha_b  = 0} \land  \alpha_a \geq 0 \land \alpha_b \leq 0 \land \alpha_b < 0 \Leftrightarrow \text{UNSAT}$
+	        }
+        edge from parent
+            node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b  = 0$}} ;
+\end{tikzpicture}
+\end{adjustbox}
+\caption{Partial symbolic execution tree related to codesnippet \ref{}. This is an addition to figure \ref{}.}
+\label{fig:sym_tree_loop}
+\end{figure}
 \todo{Add branching states on assert}
 
 Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria. Amongst other things the number $b$ is devided by a mutated $a$. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by zero and therefore an error state of the program.
