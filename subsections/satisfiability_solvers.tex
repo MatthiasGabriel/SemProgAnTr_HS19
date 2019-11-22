@@ -136,10 +136,10 @@ The second step is to remove all occurences of the negated literal from all clau
 
 This reduction can result in new unit clauses, which then will be propagated, until no more feasable clauses can be found or an empy clause is constructed\footnote{Remember when an empty clause $\Lambda$ is part of a CNF-Formula, the formula always evaluates to false.}.
 
-\begin{figure}
+\begin{figure}[H]
 \includegraphics[width=\columnwidth]{unitpropagate}
 \centering
-\caption{The flow chart of the unit propagate algorithm as desribed in algorithm \ref{algUnitProgagate}. Annotated with the actual values that are assigned for the input $F=(A \lor B ) \land (B \lor \lnot C) \land (C)$ and $\rho = \{\}$. The number on the left side is representing the current iteration.}
+\caption{Flowchart of the unit propagate algorithm as desribed in algorithm \ref{algUnitProgagate}.\\ Annotated with the actual values that are assigned for the input $F=(A \lor B ) \land (B \lor \lnot C) \land (C)$ and $\rho = \{\}$. The number on the left side is representing the current iteration.}
 \label{fig:unitpropagate}
 \end{figure}
 
