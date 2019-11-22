@@ -68,7 +68,7 @@ The predecessor of this method was first presented in 1960 by Davis and Putnam a
 
 Even though the worst case still requires exponential time, normally these algorithms provide massive computational benefits. In this publication the recursive version of the algorithm will be used, because its much easier to understand some of the key ideas. Note that the algorithm also exists in iterative versions, which are able to reduce the memory usage.
 
-The algorithm will be represented by three parts of pseudo code algorithms \ref{algDPLLRecursive}, \ref{algUnitProgagate} and \ref{algIsUnitClause} of which the first two are essential and the third is added for clarity.
+The algorithm will be represented by two parts of pseudo code algorithms \ref{algDPLLRecursive}, \ref{algUnitProgagate}.
 
 The algorithm DPLLRecursive shows the general structure of the approach, but the algorithm UnitPropagate actually is similarly important.
 
@@ -80,46 +80,38 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
  begin
    $(F, \rho)$  $\gets$ UnitPropagate
    if $\Lambda \in F$
-	return UNSAT
+       return UNSAT
    if $F = \emptyset$
-	return $\rho$
+       return $\rho$
    $l \gets$ a literal not assigned by $\rho$
    $result \gets$ DPLLRecursive($F \cup \{l\}, \rho$)
    if $result \neq UNSAT$
-	return result
+       return result
    return DPLLRecursive($F \cup \{\lnot l\}, \rho$)
 \end{algorithm}
 
-\begin{adjustbox}{width=\columnwidth}
+
 \begin{algorithm}[caption={UnitPropagate}, label={algUnitProgagate}]
  input: $F$: boolean formula in CNF-Form
 	$\rho$: assignment of variables
  output: $F$: updated boolean formula
 	$\rho$:updated assignment of variables
  begin
-   while $\Lambda \notin F$ and $\exists xClause \in F\mid IsUnitClause(xClause)$
-	$\exists xLiteral \in xClause$
-	while $\exists yClause \in F \mid xLiteral \in yClause$
-		$F \gets F \setminus \{yClause\}$     
-	while $\exists zClause \in F \mid \lnot xLiteral \in zClause$
-		$newZClause \gets zClause \setminus \{\lnot xLiteral\}$
-		$F \gets (F \setminus zClause) \cup newZClause$
+   while $F$ contains no empty Clause
+   and there exists a UnitClause $xClause$
+       $xLiteral \gets$ the only literal of $xClause$
+       while there exists an $yClause$ in $F$
+       which contains an $xLiteral$
+           $F \gets F \setminus \{yClause\}$     
+           while there exists an $zClause$ in $F$
+           which contains an $\lnot xLiteral$
+	      $newZClause \gets zClause \setminus \{\lnot xLiteral\}$
+	      $F \gets (F \setminus \{zClause\}) \cup \{newZClause\}$
 	$\rho \gets \rho \cup \{xLiteral\}$
    return $(F, \rho)$
  end
 \end{algorithm}
-\end{adjustbox}
-\todo{maybe rewrite code to be less mathematic}
-\begin{algorithm}[caption={IsUnitClause}, label={algIsUnitClause}]
- input: $C$: CNF clause
- output: true if the clause only contains
-		exactly one element
-	false if the clause contains zero 
-		or multiple elements
- begin
-   return $|C| = 1$
- end
-\end{algorithm}
+
 
 First the unit propagation is executed, after that its checked if either of the base cases is reached. 
 There are only two base cases. Either the formula contains no more clauses that result in a satisfied formula (as shown in lines 9-10) or the formula contains an empty clause which results in UNSAT (as shown in lines 7-8).
