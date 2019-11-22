@@ -118,7 +118,7 @@ There are only two base cases. Either the formula contains no more clauses that 
 
 The next step (line 11), also called branching step, selects the literal $l$, that should be eliminated in the next recursion.
 
-The last step of the DPLLRecursive is to call itself twice with a new input. In one case a new unit clause with the selected literal $l$ is added to the formula (line 12), in the other case the unit clause with the negation of the literal\footnote{The unit clause containing the negation of the literal $l$ is $\lnot l$} is added (line 15).
+The last step of the DPLLRecursive is to call itself twice with a new input. In one case a new unit clause with the selected literal $l$ is added to the formula (line 12), in the other case the unit clause with the negation of the literal\footnote{The unit clause which contains the negation of the \\ literal $l$ is $\lnot l$} is added (line 15).
 
 The step where the first recursion ends in UNSAT and returns to the base is called backtracking. In the recursive version this is very simple, because there's literaly nothing to be done. However in the iterative version, that is used in practise, the backtracking can be very sophisticated.
 
