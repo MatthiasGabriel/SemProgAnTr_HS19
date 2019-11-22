@@ -97,11 +97,11 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
  output: $F$: updated boolean formula
 	$\rho$:updated assignment of variables
  begin
-   while $\Lambda \notin F$ and $\exists xClause \in F: IsUnitClause(xClause)$
+   while $\Lambda \notin F$ and $\exists xClause \in F\mid IsUnitClause(xClause)$
 	$\exists xLiteral \in xClause$
-	while $\exists yClause \in F: xLiteral \in yClause$
+	while $\exists yClause \in F \mid xLiteral \in yClause$
 		$F \gets F \setminus \{yClause\}$     
-	while $\exists zClause \in F: \lnot xLiteral \in zClause$
+	while $\exists zClause \in F \mid \lnot xLiteral \in zClause$
 		$newZClause \gets zClause \setminus \{\lnot xLiteral\}$
 		$F \gets (F \setminus zClause) \cup newZClause$
 	$\rho \gets \rho \cup \{xLiteral\}$
