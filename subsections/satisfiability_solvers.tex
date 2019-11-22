@@ -103,11 +103,11 @@ The algorithm DPLLRecursive shows the general structure of the approach, but the
        while there exists an $yClause$ in $F$
        which contains an $xLiteral$
            $F \gets F \setminus \{yClause\}$     
-           while there exists an $zClause$ in $F$
-           which contains an $\lnot xLiteral$
-	      $newZClause \gets zClause \setminus \{\lnot xLiteral\}$
-	      $F \gets (F \setminus \{zClause\}) \cup \{newZClause\}$
-	$\rho \gets \rho \cup \{xLiteral\}$
+       while there exists an $zClause$ in $F$
+       which contains an $\lnot xLiteral$
+           $newZClause \gets zClause \setminus \{\lnot xLiteral\}$
+           $F \gets (F \setminus \{zClause\}) \cup \{newZClause\}$
+       $\rho \gets \rho \cup \{xLiteral\}$
    return $(F, \rho)$
  end
 \end{algorithm}
@@ -136,33 +136,12 @@ The second step is to remove all occurences of the negated literal from all clau
 
 This reduction can result in new unit clauses, which then will be propagated, until no more feasable clauses can be found or an empy clause is constructed\footnote{Remember when an empty clause $\Lambda$ is part of a CNF-Formula, the formula always evaluates to false.}.
 
-A simple example for UnitPropagation: 
-Assume the formula $F$ is assigned $(A \lor B ) \land (B \lor \lnot C) \land (C)$ and there are currently no variables defined, therefore $\rho$ is empty
-
-\todo{change into graphic}
-$UnitPropagate(\{\{(A,B\}, \{B, \lnot C\},\{C\}\}, \{\})$\\
-First iteration of while at line 6: \\
-$xClause \gets \{C\}$\\
-$xLiteral \gets C$\\
-First iteration of while at line 8:\\
-$yClause \gets \{C\}$\\
-$F \gets \{\{(A,B\}, \{B, \lnot C\}\}$\\
-First iteration of while at line 10:\\
-$zClause \gets \{B, \lnot C\}$ \\
-$newZClause \gets \{B\}$\\
-$F \gets \{\{(A,B\}, \{B\}\}$ \\
-$\rho \gets \{C\}$\\
-Second iteration of while at line 6: \\
-$xClause \gets \{B\}$\\
-$xLiteral \gets B$\\
-First iteration of while at line 8:\\
-$yClause \gets \{A,B\}$\\
-$F \gets \{\{B\}$\\
-Second iteration of while at line 8:\\
-$yClause \gets \{B\}$\\
-$F \gets \{\}$\\
-$\rho \gets \{B, C\}$\\
-return $\{\}, \{B, C\}$
+\begin{figure}
+\includegraphics[width=\columnwidth]{unitpropagate}
+\centering
+\caption{The flow chart of the unit propagate algorithm as desribed in algorithm \ref{algUnitProgagate}. Annotated with the actual values that are assigned for the input $F=(A \lor B ) \land (B \lor \lnot C) \land (C)$ and $\rho = \{\}$. The number on the left side is representing the current iteration.}
+\label{fig:unitpropagate}
+\end{figure}
 
 
 \subsubsection{Improvements of todays SAT solvers}
