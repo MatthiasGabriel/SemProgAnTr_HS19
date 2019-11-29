@@ -64,9 +64,9 @@ The binary clause contains exactly two literals. At a first glance this does not
 
 There are many different methods how a SAT Formula can be solved. The most simplistic approach would be to just bruteforce the formula and try to evaluate the formula for every possible combination of variables. This works well for a small number of variables but does not scale, because the computation time increases exponentially. In this chapter the method of the DPLL Procedure will be presented. It is the basis for many of the currently used algorithms and fortunately not too hard to understand.
 
-The predecessor of this method was first presented in 1960 by Davis and Putnam and improved in 1962 by Davis, Logemann and Loveland, hence the name DPLL which consists of the initials of the inventors.
+The predecessor of this method was first presented in 1960 by Davis and Putnam \cite{Davis:1960:CPQ:321033.321034} and improved in 1962 by Davis, Logemann and Loveland \cite{Davis:1962:MPT:368273.368557}, hence the name DPLL which consists of the initials of the inventors.
 
-Even though the worst case still requires exponential time, normally these algorithms provide massive computational benefits. In this publication the recursive version of the algorithm will be used, because its much easier to understand some of the key ideas. Note that the algorithm also exists in iterative versions, which are able to reduce the memory usage.
+Even though the worst case still requires exponential time, normally these algorithms provide massive computational benefits. In this publication the recursive version of the algorithm will be used, because its much easier to understand some of the key ideas. Note that the algorithm also exists in iterative versions, which are able to reduce the memory usage \cite{Gomes2008SatisfiabilityS}.
 
 The algorithm will be represented by two parts of pseudo code algorithms \ref{algDPLLRecursive}, \ref{algUnitProgagate}.
 
