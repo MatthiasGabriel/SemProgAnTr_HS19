@@ -1,7 +1,10 @@
 \section{Introduction}
-Conclic testing is a method to find programming errors by executing it in a special mode.
-Instead of using concrete values the program will be executed on so called symbolic values.
-This publication summarizes the basic knowledge that is required to understand how concolic testing works and when it's appropriate to use it.
+Concolic testing is a method to find programming errors by executing it in a special mode.
+Instead of using concrete values the program will be executed on so-called symbolic values.
+Because an execution purely based on symbolic values is sometimes not possible, a mixture of concrete and symbolic execution can be performed and will often be referred to as concolic execution.
+This article summarizes the basic knowledge that is required to understand how concolic testing works and presents deeper explanations about one specific solution.
+Based on concrete examples it's shown which errors can be detected and where manually written tests are still required.
+
 
 Section \ref{section:contraint_solvers} contains some insights about constraints solvers, which are used heavily in symbolic and concolic execution.
 Section \ref{section:symbolic_execution} section presents the basics of symbolic execution.
