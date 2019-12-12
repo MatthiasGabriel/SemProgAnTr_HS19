@@ -1,7 +1,7 @@
 \section{Symbolic Execution}\label{section:symbolic_execution}
-Symbolic execution is a method for analysing a program. Research in this area was first done around 1975. One of its main goals is to find certain programming errors, another possible goal is to prove that two programs handle each input exactly the same way. As you can imagine both of this problems are non trivial. In this publication the focus is on finding programming errors, other parts of symbolic execution might be pointed out, but will not be discussed in detail. 
+Symbolic execution is a method for analysing a program. Research in this area was first done around 1975. One of its main goals is to find certain programming errors, another possible goal is to prove that two programs handle each input exactly the same way. As you can imagine both of these problems are non-trivial. In this publication the focus is on finding programming errors, other parts of symbolic execution might be pointed out, but will not be discussed in detail. 
 
-Symbolic execution focuses on problems that can not be determined by static code analysis, because they require the execution of the program. In contradiction to a normal execution, for example in manual unit tests, random fuzzing or even actual user input, this analysis uses so called symbolic input.
+Symbolic execution focuses on problems that can not be determined by static code analysis because they require the execution of the program. In contradiction to normal execution, for example in manual unit tests, random fuzzing or even actual user input, this analysis uses so-called symbolic input.
 
 In contrast to a variable with a concrete value, for example 5, a variable with a symbolic value can have any value. This symbolic value will be restricted during the execution of the program. The execution engine will track all assigned variables throughout the execution. This collection of variables is called symbolic memory store and $\sigma$ will be used to denote it in mathematical terms \cite{SurveySymExec-CSUR18}.
 Whenever a variable gets a new value, the variable and its value will be added to the memory store. If the variable is based on a variable with a symbolic value then the new variable will also get a symbolic value. If its based on a concrete value then the concrete value itself will be stored.
@@ -14,12 +14,12 @@ If we assign the value $1$ to the variable a $a = 1$ then the memory store will 
 $$\sigma = \{a\gets 1, b \gets \alpha_b, c \gets 2*\alpha_a\}$$
 
 
-Whenever a branching statement\footnote{For example the if-statement or switch-statement.} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value in regard to the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ is used to denote it \cite{SurveySymExec-CSUR18}.
+Whenever a branching statement\footnote{For example the if-statement or switch-statement.} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value with the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ is used to denote it \cite{SurveySymExec-CSUR18}.
 Consider for example that a statement $if (a > 0)$ is the first statement of your code. Because this is a branching statement the execution engine has to calucate two different path constraints $\pi_{true}$ and $\pi_{false}$
 $$\pi_{true} = \alpha_a > 0$$
 $$\pi_{false} = \alpha_a <= 0$$
 
-Directly after the branching the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the program does not need further analysis, as it can not be reached.
+Directly after the branching, the path condition can be handed to an SMT solver, which will try to find concrete values to all the variables in the symbolic memory store, so that the condition is satisfied. If the SMT solver decides that a condition is not satisfiable this path of the program does not need further analysis, as it can not be reached.
 \subsection{An example for symbolic execution}
 \begin{codesnippet}[caption={Simple Symbolic Execution Example}, label={codeSnippet:symbolicExecution}]
 int calculateMagicNumber(int a, int b){
@@ -237,7 +237,7 @@ child {
 
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Example of a symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecution}. For presentational reasons the tree skips the last two states after each assertion state, where the result is calculated and returned. An example tree is given in \ref{fig:sym_tree_last_states}}
+\caption{Example of a symbolic execution tree based on the function displayed in code snippet \ref{codeSnippet:symbolicExecution}. For presentational reasons the tree skips the last two states after each assertion state, where the result is calculated and returned. An example tree is given in \ref{fig:sym_tree_last_states}}
 \label{fig:sym_example_one}
 \end{figure*}
 \begin {figure}
@@ -300,11 +300,11 @@ child {
             node[kant, below, pos=.5] {$(\alpha_a+1)*\alpha_b  = 0$}} ;
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Partial symbolic execution tree related to codesnippet \ref{codeSnippet:symbolicExecution}. This is an addition to figure \ref{fig:sym_example_one}. Note that the branching after State M happens automatically, because a potentially dangerous operation was detected as discussed in section \ref{section:dangerous_operations}.}
+\caption{Partial symbolic execution tree related to code snippet \ref{codeSnippet:symbolicExecution}. This is an addition to figure \ref{fig:sym_example_one}. Note that the branching after State M happens automatically, because a potentially dangerous operation was detected as discussed in section \ref{section:dangerous_operations}.}
 \label{fig:sym_tree_last_states}
 \end{figure}
 
-Assume that someone had written the function $calculateMagicNumber$ as illustrated in the codesnippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria. Amongst other things the number $b$ is devided by a mutated $a$. Therefore the person added an assertion criteria which checks that $a$ is not $0$ to prevent a division by zero and therefore an error state of the program.
+Assume that someone had written the function $calculateMagicNumber$ as illustrated in the code snippet \ref{codeSnippet:symbolicExecution}. The function takes two integer arguments $a$ and $b$ and calculates a magic number. This magic number should meet certain criteria. Amongst other things, the number $b$ is divided by a mutated $a$. Therefore the person added an assertion which checks that $a$ is not $0$ to prevent a division by zero and therefore an error state of the program.
 
 A symbolic execution engine is now capable to determine if there are any input values $a$  and $b$ that violate this assertion. To check if an assertion might fail the negative of the assert condition is added to the path condition and then checked for a valid input by the SMT solver. The whole symbolic execution tree is illustrated in figure \ref{fig:sym_example_one}. Each node consists of 4 different parts:
 \begin{itemize}
@@ -313,12 +313,12 @@ A symbolic execution engine is now capable to determine if there are any input v
 \item $\pi$ is the current path condition
 \item The next statement which should be analysed
 \end{itemize}
-Whenever $\pi$ gets updated a branching takes place. In our example the left child will contain the branch which evaluates the statement to true and the right childs $\pi$ will get updated by the negated condition.
-As you can see the assertion fails when it is applied to $State J$, because there's a valid assignment $\alpha_a = 0$ and $\alpha_b = 0$ for this formula. Note that this is a special case, because the condition can only be met by a unique pair of values. This does not have to be the case. Imagine that the whole codeblock on lines 7-9 is not present. The States H, I and J would therefore vanish from the symbolic execution tree and the condition that's checked at the assertion is a follows:
+Whenever $\pi$ gets updated a branching takes place. In our example, the left child will contain the branch which evaluates the statement to true and the right child $\pi$ will get updated by the negated condition.
+As you can see the assertion fails when it is applied to $State J$, because there's a valid assignment $\alpha_a = 0$ and $\alpha_b = 0$ for this formula. Note that this is a special case because the condition can only be met by a unique pair of values. This does not have to be the case. Imagine that the whole code block on lines 7-9 is not present. The States H, I and J would therefore vanish from the symbolic execution tree and the condition that's checked at the assertion is a follows:
 $$\alpha_a  = 0 \land \alpha_a \geq 0 \land \alpha_b \leq 0$$
-This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero. In this case the symbolic execution engine normally will return one concrete example of this range, however it's not defined which one exactly. 
+This formula evaluates to true for $\alpha_a = 0$  and any $\alpha_b$ that is negative or zero. In this case, the symbolic execution engine normally will return one concrete example of this range, however, it's not defined which one exactly. 
 \subsection{Restrictions in practical problems}\label{section:symbolic_restrictions}
-Due to the fact that every branching statement creates two new states, which together cover both possible execution paths, it's possible to reason about the program with 100\% certainty. For example if a branch is not reachable by symbolic execution there is literally no possiblity for any concrete values to reach this branch. Note however, that the growth of new states is exponential in relation to the number of branching statements. Even for small programs as seen in example \ref{fig:sym_example_one} the number of states is quite big. The main problem arises with the introduction of loops, as each iteration results in a new subtree.
+Due to the fact that every branching statement creates two new states, which together cover both possible execution paths, it's possible to reason about the program with 100\% certainty. For example, if a branch is not reachable by symbolic execution there is literally no possibility for any concrete value to reach this branch. Note however, that the growth of new states is exponential in relation to the number of branching statements. Even for small programs as seen in example \ref{fig:sym_example_one} the number of states is quite big. The main problem arises with the introduction of loops, as each iteration results in a new subtree.
 \begin{codesnippet}[caption={Symbolic Execution Looping}, label={codeSnippet:symbolicExecutionLoop}]
 int calucateQuotient(int a, int b){
    int q = 0;
@@ -461,11 +461,11 @@ child {
 
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Example of a partial symbolic execution tree based on the function displayed in codesnippet \ref{codeSnippet:symbolicExecutionLoop}.}
+\caption{Example of a partial symbolic execution tree based on the function displayed in code snippet \ref{codeSnippet:symbolicExecutionLoop}.}
 \label{fig:sym_tree_loop}
 \end{figure}
 Lets consider the small example in codesnippet \ref{codeSnippet:symbolicExecutionLoop}, which is a very naive program that tries to calculate the quotient of a division\footnote{For presentational reasons the dividend is renamed to $a$, the divisor to $b$ and the quotient to $q$.}. A partial symbolic execution graph of this function is displayed in \ref{fig:sym_tree_loop}. Based on the state B the while loop at line 3 will be hit and a branching takes place and the condition $\alpha_a < \alpha_b$ is added to $\pi_{false}$ which leads to state C. It is possible to find a combination of $\alpha_a$ and $\alpha_b$ such that $\pi$ of state C is evaluated to true, for example $\alpha_a \gets 1$ and $\alpha_b \gets 2$. On the next statement of state C the value of q will be returned and this branch ends. On the other hand $\alpha_a \geq \alpha_b$ added $\pi_{true}$, which results in state D. In the following states E and F, the variables $a$ and $q$ get updated and with state F the condition will be checked again. As $a$ now has the value $\alpha_a - \alpha_b$ the condition is not quite the same and a new branch with $\pi_{false} = \alpha_a \geq \alpha_b \land \alpha_a - \alpha_b < \alpha_b$ is calculated. It is possible to find values that match this requirement, for example $\alpha_a \gets 3$ and $\alpha_b \gets 2$. Because of this the value of q, which is at this point 1, will be returned. This process will continue to create new states until the engine is stopped.
 
-Another problem with the analysis of real world applications is their dependency on other code as well as some interaction with other systems, such as the operating system for reading file, the database or even human interaction. It is not possible to determine which values are valid input and which output results from the external code, that is not part of the analysis. For the interaction with other systems the main problems arise from the restriction that each state has to be independent, e.g. if one of the states modifies an actual file this will affect all other states and lead to wrong analysis results. Because the actual system is not under the control of the analysis engine its not possible to reproduce all possible outputs. Assume that a program reads a static file, either the file exists for the whole analysis or it does not exist at all.
+Another problem with the analysis of real-world applications is their dependency on other code as well as some interaction with other systems, such as the operating system for reading a file, the database or even human interaction. It is not possible to determine which values are valid input and which output results from the external code, that is not part of the analysis. For the interaction with other systems the main problems arise from the restriction that each state has to be independent, e.g. if one of the states modifies an actual file this will affect all other states and lead to wrong analysis results. Because the actual system is not under the control of the analysis engine it's not possible to reproduce all possible outputs. Assume that a program reads a static file, either the file exists for the whole analysis or it does not exist at all.
  
 In the following chapter \ref{section:concolic_testing} these restrictions are discussed and partially removed.

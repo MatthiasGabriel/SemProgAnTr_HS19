@@ -1,7 +1,7 @@
 \subsection{Satisfiability Modulo Theories Solvers}
-In relation to the Satisfiability Solvers, the Satisfiablity Modulo Theories solvers, short SMT solvers, operate on a higher logical level. Because it is often time consuming to formulate your domain specific problem as a boolean formula and transform it into CNF a new class of solvers was defined that try to overcome this restriction. In this section an overview of STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, is given.
+In relation to the Satisfiability Solvers, the Satisfiability Modulo Theories solvers, short SMT solvers, operate on a higher logical level. Because it is often time-consuming to formulate your domain-specific problem as a boolean formula and transform it into CNF a new class of solvers was defined that try to overcome this restriction. In this section, an overview of STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, is given.
 \todo{maybe add/research something more about first order theories}
-In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. In practice this allows us to reason about various data types such as integers but also certain datastructures like lists and arrays.
+In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. In practice this allows us to reason about various data types such as integers but also certain data structures like lists and arrays.
 
 As an input STP allows the following operations, which can be grouped in the following way:
 \begin{itemize}
@@ -9,7 +9,7 @@ As an input STP allows the following operations, which can be grouped in the fol
 \item \textbf{mathematic operations} Left and right shifts, addition, multiplication, unary minus, division, modulo, relational operators
 \item \textbf{others} Array read, array write,  extraction of bit-vectors\footnote{$x[i:j]$ is the extraction of the bytes between $i$ and $j$ of $x$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}, concatenation of bit-vectors\footnote{The concatenation of two bit-vectors $x_{[n]}$ and $y_{[m]}$ is expressed as $x \circ y$ and returns a new vector $z_{[m+n]}$ of length $m+n$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}
 \end{itemize}
-STP was specifically developed with focus on software analysis projects, because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem, before it will be converted into conjunctive normal form and solved by a SAT solver\footnote{As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used.}. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
+STP was specifically developed with a focus on software analysis projects because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem before it will be converted into conjunctive normal form and solved by a SAT solver\footnote{As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used.}. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
 
 \todo{add some more content about the "architecture" / flow of STP}
 \todo{add more content about the general working of STP, especially the array refinement}
@@ -23,7 +23,7 @@ To reduce the size of a problem it applies optimations specific to bit-vector an
 \end{figure}
 In the original paper \cite{Ganesh:2007:DPB:1770351.1770421} there are two of these optimizations discussed. The first optimization is an "on-the-fly solver for mod-$2^n$ linear arithmetic" which is embedded in STP. 
 
-When reasoning about fixed length bit-vector arithmetic, this part of the program tries to reason about parts of the bit-vector equation system.
+When reasoning about fixed-length bit-vector arithmetic, this part of the program tries to reason about parts of the bit-vector equation system.
 The idea is to use the property of such a vector so that you can always calculate in $\mod{2^b}$ where $b$ is the length of the bit-vector.
 
 There is a mathematical theorem in basic number theory that can be used to determine if a solution to an equation exists if it is$\mod{2^b}$:
@@ -54,10 +54,10 @@ $$2(\underbrace{4y+2z}_{x})+ 4y + 2z = 0 \Mod{2^3} \Leftrightarrow 4y + 6z = 0\M
 $}\]
 There are no longer any ${a_i}$ in these equations, that have an $gcd(a_i,2^3) = 1$ and therefore no further variable can be isolated.
 
-The algorithm then searches the coefficent $a_i$ which is the smallest in the whole system and chooses the corresponding equation.
-After the smallest $a_i$ is choosen the whole system is devided by it and the $\log_{2}(a_i)$ highest bits are dropped.
+The algorithm then searches the coefficient $a_i$ which is the smallest in the whole system and chooses the corresponding equation.
+After the smallest $a_i$ is chosen the whole system is divided by it and the $\log_{2}(a_i)$ highest bits are dropped.
 
-A whole new equation system is formed with linear vectors length $b-1$, in the example two.
+A whole new equation system is formed with linear vectors length $b-1$, in example two.
 The new variables are named $y[1:0]$ and $z[1:0]$ to signal that they represent the bits 1 to 0 of the regarding variable.
 $$y[1 : 0] + 2z[1 : 0] + 1 = 0 \Mod{2^2}$$
 $$2y[1 : 0] + 3z[1 : 0] = 0\Mod{2^2}$$

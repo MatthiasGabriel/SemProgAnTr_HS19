@@ -1,10 +1,10 @@
 \section{Handwritten vs generated tests}\label{section:handwritten_vs_generated_tests}
-Even though concolic testing is generating very high coverage in quite a short time, in my opinion it does not superseed handwritten tests, butit can be a great addition to another testsuite. 
-Even with the possibly to test that the functionality of two functions is exactly the same as we saw in section \ref{section:software_equivalence} it's still not possible to automatically test that the functionality of a function behaves as we'd expect.
+Even though concolic testing is generating very high coverage in quite a short time, in my opinion, it does not supersede handwritten tests, but it can be a great addition to another test suite. 
+Even with the possibility to test that the functionality of two functions is equivalent, as we saw in section \ref{section:software_equivalence}, it's still not possible to automatically test that the functionality of a function behaves as we'd expect.
 
-In relation to handwritten tests, concolic execution is able to test nearly every possible path in a program and therefore it is very powerful in detecting illegal operations such as division by zero, invalid array access, etc, in the code. It is even possible to deliver concrete values which let the program fail. 
+In relation to handwritten tests, concolic execution is able to test nearly every possible path in a program and therefore it is very powerful in detecting illegal operations such as division by zero, invalid array access, etc, in the code. It is even possible to deliver concrete values that let the program fail. 
 
-In my opinion a new testcase for these concrete values should be added to the handwritten testsuite and after that the programming error can be fixed. It is possible that the input is not allowed in the program and an additional input constraint is defined. In such a manner an unexpected and unhandled error case can be converted into a handled exception case.
+In my opinion, a new test case for these concrete values should be added to the handwritten test suite and after that, the programming error can be fixed. It is possible that the input is not allowed in the program and an additional input constraint is defined. In such a manner an unexpected and unhandled error case can be converted into a handled exception case.
 
 \begin{codesnippet}[caption={Sum with index overflow}, label={codeSnippet:sum_indexoverflow}]
 int sum(int summands[], int size){
@@ -24,4 +24,4 @@ int sum(int summands[], int size){
    return sum;
 }
 \end{codesnippet}
-Imagine the following code displayed in codesnippet \ref{codeSnippet:sum_indexoverflow} which sums up all the input. The code clearly has an index overflow problem and symbolic execution will generate an error test case. However image the code from codesnippet \ref{codeSnippet:sum_indexunderflow}, which also has an index problem, but it "only" ignores the first number. It is not possible to find this error with symbolic execution. A handwritten test is required that states which output should be generated for a specific input.
+Imagine the following code displayed in code snippet \ref{codeSnippet:sum_indexoverflow} which sums up all the input. The code clearly has an index overflow problem and symbolic execution will generate an error test case. However image the code from code snippet \ref{codeSnippet:sum_indexunderflow}, which also has an index problem, but it "only" ignores the first number. It is not possible to find this error with symbolic execution. A handwritten test is required that states which output should be generated for a specific input.
