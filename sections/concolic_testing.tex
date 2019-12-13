@@ -197,7 +197,7 @@ The compilation is nearly the same as before \textit{clang -c -g -emit-llvm magi
 KLEE gets called a bit differently: \textit{klee -posix-runtime -libc=uclibc --only-output-states-covering-new magicnumber\_args.bc -sym-args 1 3 4}.
 The additional option \textit{-posix-runtime} is required when using symbolic arguments, the parameter \textit{-libc=uclibc} replaces the default libc with the prepacked libc of KLEE, which allows the \textit{atoi} function to work with symbolic values.
 With the parameter \textit{-sym-args 1 3 4} KLEE knows how many symbolic values of which maximum length it needs to generate. In our case KLEE tries different combinations of one to three arguments with a maximum length of four characters.
-When executed with these settings KLEE detects the error too. However, due to the additional complexity of the external function \textit{atoi} the execution of KLEE takes much longer.
+When executed with these settings KLEE detects the error too. However, due to the additional complexity of the external function \textit{atoi} the execution of KLEE covers much more paths and generates around 15 tests. The execution therefore takes much longer.
 
 The comparison of the two test cases shows that they are not the same.
 Because it's not possible to restrict the input variables to integers the generated concrete values are not char arrays, which in the progam code will be converted into integers.
