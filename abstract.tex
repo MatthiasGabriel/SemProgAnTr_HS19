@@ -2,8 +2,7 @@
 There exist certain classes of errors, which are hard to reason about in static code analysis and it's difficult and time consuming to manually write tests that cover every possibility.
 In recent years different approaches that require the program to execute, such as fuzzing or symbolic execution, have arisen.
 In symbolic execution instead of using concrete values, the program will be executed on so-called symbolic values.
-This article summarizes the basic knowledge that is required to understand how concolic testing works and presents deeper explanations about KLEE, which just is one of many solutions.
 Because an execution purely based on symbolic values is sometimes not possible, concolic execution, a mixture of concrete and symbolic execution can be performed and will often be referred to as concolic testing.
+This article summarizes the basic knowledge that is required to understand how concolic testing works and presents deeper explanations about KLEE, which is one of many test engines.
 Based on concrete examples it's shown which errors can be detected and where manually written tests are still required.
-\todo{write abstract}
 \end{abstract}

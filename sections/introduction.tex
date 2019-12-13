@@ -1,7 +1,13 @@
 \section{Introduction}
+In recent years many different publications were published in the field of symbolic and concolic execution. 
+
+The primary purpose of this article is to give an overview of the techniques which are used in symbolic and concolic execution engines.
+It mainly focuses on the specific engine KLEE \cite{Cadar:2008:KUA:1855741.1855756}, but many of the presented concepts are found in numerous other applications.
+The understanding of these techniques is very important to understand the advantages and disadvantages that arise from using automated testing engines.
+
+The second purpose is to analyse how KLEE behaves in relation to other testing approaches.
 
 Section \ref{section:contraint_solvers} contains some insights about constraints solvers, which are used heavily in symbolic and concolic execution.
 Section \ref{section:symbolic_execution} section presents the basics of symbolic execution.
 Section \ref{section:concolic_testing} finally focuses on concolic testing based on the example of KLEE \cite{Cadar:2008:KUA:1855741.1855756}. 
-Section \ref{section:handwritten_vs_generated_tests} contains a short breakdown about my opinion where concolic testing is helpful and where it's limits are.
-\todo{rewrite introduction}
+Section \ref{section:handwritten_vs_generated_tests} contains a short breakdown of my opinion where concolic testing is helpful and where it's limits are.
