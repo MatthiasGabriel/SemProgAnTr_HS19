@@ -11,16 +11,17 @@ As an input STP allows the following operations, which can be grouped in the fol
 \end{itemize}
 STP was specifically developed with a focus on software analysis projects because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem before it will be converted into conjunctive normal form and solved by a SAT solver. As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
 
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{STP_architecture}
+\caption{STP Architecture}
+\label{fig:STP_architecture}
+\end{figure}
+
 \todo{add some more content about the "architecture" / flow of STP}
 \todo{add more content about the general working of STP, especially the array refinement}
 
 To reduce the size of a problem it applies optimations specific to bit-vector and array theory.
-\begin{figure}
-\includegraphics[width=\linewidth]{STP_architecture}
-\centering
-\caption{STP Architecture}
-\label{fig:STP_architecture}
-\end{figure}
+
 In the original paper \cite{Ganesh:2007:DPB:1770351.1770421} there are two of these optimizations discussed. The first optimization is an "on-the-fly solver for mod-$2^n$ linear arithmetic" which is embedded in STP. 
 
 When reasoning about fixed-length bit-vector arithmetic, this part of the program tries to reason about parts of the bit-vector equation system.

@@ -120,6 +120,13 @@ The next step (line 11), also called branching step, selects the literal $l$, wh
 
 The last step of the DPLLRecursive is to call itself twice with new input. In one case a new unit clause with the selected literal $l$ is added to the formula (line 12), in the other case the unit clause with the negation of the literal, $\lnot l$, is added (line 15).
 
+\begin{figure}
+\includegraphics[width=\columnwidth]{unitpropagate}
+\centering
+\caption{Flowchart of the unit propagate algorithm as desribed in algorithm \ref{algUnitProgagate}.\\ Annotated with the actual values that are assigned for the input $F=(A \lor B ) \land (B \lor \lnot C) \land (C)$ and $\rho = \{\}$. The number on the left side is representing the current iteration.}
+\label{fig:unitpropagate}
+\end{figure}
+
 The step where the first recursion ends in UNSAT and returns to the base is called backtracking. In the recursive version, this is very simple because there's literally nothing to be done. However in the iterative version, that is used in practice, backtracking can be very sophisticated.
 
 The second part of the algorithm, called UnitPropagate, which is the first step of the DPLL algorithm, will try to assign values to all variables, which can be deducted.
@@ -136,12 +143,6 @@ The second step is to remove all occurrences of the negated literal from all cla
 
 This reduction can result in new unit clauses, which then will be propagated until no more feasible clauses can be found or an empty clause $\Lambda$, which leads to an unfeasible formula, is constructed.
 
-\begin{figure}[H]
-\includegraphics[width=\columnwidth]{unitpropagate}
-\centering
-\caption{Flowchart of the unit propagate algorithm as desribed in algorithm \ref{algUnitProgagate}.\\ Annotated with the actual values that are assigned for the input $F=(A \lor B ) \land (B \lor \lnot C) \land (C)$ and $\rho = \{\}$. The number on the left side is representing the current iteration.}
-\label{fig:unitpropagate}
-\end{figure}
 
 
 \subsubsection{Improvements of today's SAT solvers}
