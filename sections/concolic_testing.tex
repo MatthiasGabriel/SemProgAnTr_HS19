@@ -1,5 +1,5 @@
 \section{Concolic Testing} \label{section:concolic_testing}
-Concolic execution tries to overcome the restrictions of symbolic execution, that were discussed in \ref{section:symbolic_restrictions}. There are many different approaches to do this, but all trade in some of the completeness to be able to fulfill at least a partial analysis of the program.
+Concolic execution tries to overcome the restrictions of symbolic execution, that were discussed in \ref{section:symbolic_restrictions}. There are many different approaches to do this, but all trade in some of the completeness to be able to fulfil at least a partial analysis of the program.
 Based on KLEE \cite{Cadar:2008:KUA:1855741.1855756} one possible approach to these two problems will be presented in this section.
 
 \subsection{Main approaches of KLEE}
@@ -15,22 +15,22 @@ If it is a branching statement, $\pi_{true}$ as well as $\pi_{false}$ are calcul
 
 This process continues until all branches are processed or a defined timer is reached. In smaller applications, it's still possible to reach all possible states and therefore reach completeness. In more complex applications it's required to optimize the scheduling \ref{section:state_scheduling} to reach the best possible coverage of states before the timer hits the defined limit.
 \subsubsection{Approach for dangerous operations}\label{section:dangerous_operations}
-In addition to branching statements, each potentially dangerous operation\footnote{Dangerous operations include pointer dereferences, array access, division operations, modulo operations and assert statements.} generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, which results in an invalid operation. This state never has a subtree attached. If the path condition is infeasible the execution stops automatically, before the branching takes place. However, if it's feasible, an error is raised resulting in the cancelation of this subtree. On the other branch, the negative of the condition is added to prevent the error in this state and to be able to continue the analysis of the program.
+In addition to branching statements, each potentially dangerous operation\footnote{Dangerous operations include pointer dereferences, array access, division operations, modulo operations and assert statements.} generates a new branch too. With this additional branching step it's possible to automatically check if any input is possible, which results in an invalid operation. This state never has a subtree attached. If the path condition is infeasible the execution stops automatically, before the branching takes place. However, if it's feasible, an error is raised resulting in the cancellation of this subtree. On the other branch, the negative of the condition is added to prevent the error in this state and to be able to continue the analysis of the program.
 
-The only special cases of these dangerous operations are loading and storing operations. KLEE maps every object to a STP specific array. This enables STP to ignore the parts of the state data, which are not directly related to the expression that gets evaluated. Since it could be possible that a "symbolic" pointer refers to different objects, the state will be cloned for each of the objects as soon as the pointer gets dereferenced. With the cloning it can be ensured that in every state the pointer references exactly one specific object. This may seem very pricy, as for each possible object a new state has to be created. However in reality semantic pointers to multiple objects rarely happen. 
+The only special cases of these dangerous operations are loading and storing operations. KLEE maps every object to a STP specific array. This enables STP to ignore the parts of the state data, which are not directly related to the expression that gets evaluated. Since it could be possible that a "symbolic" pointer refers to different objects, the state will be cloned for each of the objects as soon as the pointer gets dereferenced. With the cloning it can be ensured that in every state the pointer references exactly one specific object. This may seem very pricy, as for each possible object a new state has to be created. However, in reality, semantic pointers to multiple objects rarely happen. 
 
 \subsubsection{State management}
 As there are many states created and even hold during the execution, KLEE tries to minimize both the creation time of a new state as well as the memory footprint. It does this by taking advantage of the big redundancy that these states have because they are often related and only differ in some of their properties. To be able to use this redundancy KLEE treats all memory objects as immutable and thus can reuse them as often as required. The consequence of this property is that whenever an object has to be modified it needs to be copied. This process is also called copy-on-write.
 
 \subsubsection{State scheduling}\label{section:state_scheduling}
-Even if the states are very slim and efficiently created depending on the order of the computation, the computation engine could be blocked by a single loop, leading to the starvation of other states. Assume a very simplistic depth-first approach that first creates the two related states on every branching condition and after that processes the state that fulfills the branching condition. In the example with a loop\ref{fig:sym_tree_loop} the engine would always process the left child and no output would be generated at all\footnote{State C and State G would be constructed but never analyzed and therefore no return statement would be reached.}.
+Even if the states are very slim and efficiently created depending on the order of the computation, the computation engine could be blocked by a single loop, leading to the starvation of other states. Assume a very simplistic depth-first approach that first creates the two related states on every branching condition and after that processes the state that fulfils the branching condition. In the example with a loop\ref{fig:sym_tree_loop} the engine would always process the left child and no output would be generated at all\footnote{State C and State G would be constructed but never analyzed and therefore no return statement would be reached.}.
 
 To prevent this, KLEE implements two different kinds of scheduling algorithms. 
 
-Random Path Selection organises the states in a binary tree, as visualised by the previous examples, but instead of just going depth-first at the current path, the algorithms randomly selects which path to go when traversing the tree. After each execution of a state, the traversing starts at the top again and thus favors unprocessed states that are higher up in the tree as visualized in figure \ref{fig:state_tree_probability}. Because of this, the starvation of states is no longer possible. A nice side effect of this selection is, that the conditions in higher states are smaller and therefore the processing takes less effort.
+Random Path Selection organises the states in a binary tree, as visualised by the previous examples, but instead of just going depth-first at the current path, the algorithms randomly selects which path to go when traversing the tree. After each execution of a state, the traversing starts at the top again and thus favours unprocessed states that are higher up in the tree as visualized in figure \ref{fig:state_tree_probability}. Because of this, the starvation of states is no longer possible. A nice side effect of this selection is, that the conditions in higher states are smaller and therefore the processing takes less effort.
 
 Coverage-Optimized Search is the second algorithm that is included in KLEE. As its name suggests, it tries to maximize the coverage. It uses different heuristics to determine how probable it is to reach currently uncovered code in the next few steps. After that it randomly selects the branch based on this probability, preferring states with higher probability.
-To benefit from the positive features of both algorithm KLEE normally uses them in a round-robin manner\footnote{Note that the scheduling is very much dependent on the analysed software. Another scheduling algorithm may deliver better results for a specific program. For that reason KLEE allows other state scheduling mechanisms to be used.}.
+To benefit from the positive features of both algorithms KLEE normally uses them in a round-robin manner\footnote{Note that the scheduling is very much dependent on the analysed software. Another scheduling algorithm may deliver better results for a specific program. For that reason KLEE allows other state scheduling mechanisms to be used.}.
 \begin{figure}
 \begin{tikzpicture}[
     grow=down,
@@ -132,7 +132,7 @@ Note that depending on the execution mode of KLEE it is no longer required to co
 
 Executing test cases which use a symbolic model is not trivial, because the environment has to be set up to reflect the symbolic model. Before executing the program KLEE creates the required files, directories, etc and calls the program with the new concrete file locations. Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and does not execute the system call at all.
 \subsubsection{Execution of KLEE}
-There exist two different modes how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber which is defined in code-snippet \ref{codeSnippet:symbolicExecution} should be tested.
+There exist two different modes of how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber which is defined in code-snippet \ref{codeSnippet:symbolicExecution} should be tested.
 
 The first approach is to write a custom main function in which two symbolic variables are defined and call the function with these variables as shown in code-snippet \ref{codeSnippet:klee_inline}.
 \begin{codesnippet}[caption={Main function which defines two symbolic variables and calls the function calculateMagicNumber of code-snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_inline}]
@@ -147,7 +147,7 @@ int main() {
 
 After the compilation to LLVM with the command \textit{clang -I ../include -c -g -emit-llvm magicnumber\_symbolic.c}, KLEE can be started on the newly generated file with the command \textit{klee --only-output-states-covering-new magicnumber\_symbolic.bc}.
 
-With these settings KLEE will automatically generate 5 different tests and detect one error. 
+With these settings, KLEE will automatically generate 5 different tests and detect one error. 
 The test case which triggered the error contains the concrete values of $a$ and $b$ which trigger the error and can be viewed with the command \textit{ktest-tool klee-last/test<test\_number>.ktest}.
 The output is display in code-snippet \ref{codeSnippet:test_case_one}.
 
@@ -179,7 +179,7 @@ object 2: text: ....
 \end{codesnippet}
 
 The second approach is to use a main function which takes the arguments from the command line and calls the function with the parsed input as shown in code-snippet \ref{codeSnippet:klee_arguments}.
-In this approach it's no longer required to define in the program code which arguments should be treated as symbolic values. Additionally the code has no longer a dependency on the program code of KLEE.
+In this approach, it's no longer required to define in the program code which arguments should be treated as symbolic values. Additionally, the code has no longer a dependency on the program code of KLEE.
 
 \begin{codesnippet}[caption={Main function which parses two input arguments and calls the function calculateMagicNumber of code-snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_arguments}]
 int main(int argc, char **argv) {
@@ -196,11 +196,11 @@ The compilation is nearly the same as before \textit{clang -c -g -emit-llvm magi
 
 KLEE gets called a bit differently: \textit{klee -posix-runtime -libc=uclibc --only-output-states-covering-new magicnumber\_args.bc -sym-args 1 3 4}.
 The additional option \textit{-posix-runtime} is required when using symbolic arguments, the parameter \textit{-libc=uclibc} replaces the default libc with the prepacked libc of KLEE, which allows the \textit{atoi} function to work with symbolic values.
-With the parameter \textit{-sym-args 1 3 4} KLEE knows how many symbolic values of which maximum length it needs to generate. In our case KLEE tries different combinations of one to three arguments with a maximum length of four characters.
+With the parameter \textit{-sym-args 1 3 4} KLEE knows how many symbolic values of which maximum length it needs to generate. In our case, KLEE tries different combinations of one to three arguments with a maximum length of four characters.
 When executed with these settings KLEE detects the error too. However, due to the additional complexity of the external function \textit{atoi} the execution of KLEE covers much more paths and generates around 15 tests. The execution therefore takes much longer.
 
-The comparison of the two test cases shows that they are not the same.
-Because it's not possible to restrict the input variables to integers the generated concrete values are not char arrays, which in the progam code will be converted into integers.
+The comparison of the two test cases shows that the inputs that triggered the error are not equal.
+Because it's not possible to restrict the input variables to integers the generated concrete values are char-arrays, which in the program code will be converted into integers.
 
 \begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code-snippet \ref{codeSnippet:klee_arguments}}, label={codeSnippet:test_case_two}]
 ktest file : 'klee-last/test000006.ktest'
