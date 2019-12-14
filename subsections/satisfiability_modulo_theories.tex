@@ -5,11 +5,11 @@ In contrast to SAT solvers, STP is able to solve decision problems that contain 
 
 As an input STP allows the following operations, which can be grouped in the following way:
 \begin{itemize}
-\item \textbf{logical and boolean} Constant Values TRUE and FALSE, variables with a boolean value, any boolean operator\footnote{such as $\lor$,$\land$, $\Rightarrow$, etc.}, bitwise boolean operators
+\item \textbf{logical and boolean} Constant Values TRUE and FALSE, variables with a boolean value, any boolean operator, bitwise boolean operators
 \item \textbf{mathematic operations} Left and right shifts, addition, multiplication, unary minus, division, modulo, relational operators
 \item \textbf{others} Array read, array write,  extraction of bit-vectors\footnote{$x[i:j]$ is the extraction of the bytes between $i$ and $j$ of $x$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}, concatenation of bit-vectors\footnote{The concatenation of two bit-vectors $x_{[n]}$ and $y_{[m]}$ is expressed as $x \circ y$ and returns a new vector $z_{[m+n]}$ of length $m+n$ as described in \cite{Ganesh:2007:DPB:1770351.1770421}.}
 \end{itemize}
-STP was specifically developed with a focus on software analysis projects because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem before it will be converted into conjunctive normal form and solved by a SAT solver\footnote{As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used.}. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
+STP was specifically developed with a focus on software analysis projects because there are often extremely large constraint problems involved. In relation to other SMT solvers STP focuses on reducing the size of a quantifier-free first order logic problem before it will be converted into conjunctive normal form and solved by a SAT solver. As a default SAT solver MiniSat\cite{10.1007/978-3-540-24605-3_37} is used. This procedure allows it to benefit from the heavily engineered and therefore very fast SAT solvers. Other SMT solvers apply the theory specific decision procedures not until in the included SAT solver, which often leads to problems with the SAT specific optimizations. The architecture of STP is visualized in figure \ref{fig:STP_architecture}.
 
 \todo{add some more content about the "architecture" / flow of STP}
 \todo{add more content about the general working of STP, especially the array refinement}
@@ -35,7 +35,7 @@ Let's assume the following equality system\footnote{The example is originally fr
 $$3x+4y+2z=0 \Mod{2^3}$$
 $$2x+2y+2=0  \Mod{2^3}$$
 $$2x+4y+2z=0 \Mod{2^3}$$
-If the $gcd$ of two numbers is $a$ and $m$ is 1, $a$ has per definition a multiplicative inverse in mod $m$. In this particular case $m=2^b$. This property is necessary, because one of the variables needs to be isolated and therefore multiplied with the inverse\footnote{This is neccessary because division in modular arithmetic is defined as the multiplication of the inverse and therefore only works for numbers that have an inverse.}.
+If the $gcd$ of two numbers is $a$ and $m$ is 1, $a$ has per definition a multiplicative inverse in mod $m$. In this particular case $m=2^b$. This property is necessary, because one of the variables needs to be isolated and therefore multiplied with the inverse. This is neccessary because division in modular arithmetic is defined as the multiplication of the inverse and therefore only works for numbers that have an inverse.
 The algorithm chooses the first equation and tries to find an $a_i$ where $gcd(a_i,2^3) = 1$ is true.
 
 In the example the algorithm selects $a_1$ which has the value $3$, therefore $x$ can be isolated in the first equation.

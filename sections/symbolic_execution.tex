@@ -14,7 +14,7 @@ If we assign the value $1$ to the variable a $a = 1$ then the memory store will 
 $$\sigma = \{a\gets 1, b \gets \alpha_b, c \gets 2*\alpha_a\}$$
 
 
-Whenever a branching statement\footnote{For example the if-statement or switch-statement.} is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value with the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ is used to denote it \cite{SurveySymExec-CSUR18}.
+Whenever a branching statement is reached that depends on a symbolic value, the symbolic execution engine must follow both of the branches and restrict the symbolic value with the condition. These restrictions are collected and together describe all conditions that the symbolic variables must satisfy in this specific branch. This collection is often called path condition or path constraints and $\pi$ is used to denote it \cite{SurveySymExec-CSUR18}.
 Consider for example that a statement $if (a > 0)$ is the first statement of your code. Because this is a branching statement the execution engine has to calucate two different path constraints $\pi_{true}$ and $\pi_{false}$
 $$\pi_{true} = \alpha_a > 0$$
 $$\pi_{false} = \alpha_a <= 0$$

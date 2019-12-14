@@ -59,7 +59,7 @@ This property will be heavily used by the SAT solver.
 
 Consider the example clauses used above. In clause $A$ the variable $A$ has to be true and in the other example, $\lnot A$ the variable $A$ has to be false.
 
-The binary clause contains exactly two literals. At a first glance, this does not look very special at all, but binary clauses allow powerful optimizations. As soon as one of the two variables gets assigned it's possible to deduct the value of the other variable\footnote{Binary clauses for example allow efficient tracking of the event when a formula gets transformed into a binary clause.}.
+The binary clause contains exactly two literals. At a first glance, this does not look very special at all, but binary clauses allow powerful optimizations. As soon as one of the two variables gets assigned it's possible to deduct the value of the other variable. This, for example, allows it to efficiently track the event when a variable can be deducted.
 \subsubsection{DPLL}
 
 There are many different methods how a SAT Formula can be solved. The most simplistic approach would be to just brute-force the formula and try to evaluate the formula for every possible combination of variables. This works well for a small number of variables but does not scale, because the computation time increases exponentially. In this chapter, the method of the DPLL procedure will be presented. It is the basis for many of the currently used algorithms and fortunately not too hard to understand.
@@ -118,7 +118,7 @@ There are only two base cases. Either the formula contains no more clauses that 
 
 The next step (line 11), also called branching step, selects the literal $l$, which should be eliminated in the next recursion.
 
-The last step of the DPLLRecursive is to call itself twice with new input. In one case a new unit clause with the selected literal $l$ is added to the formula (line 12), in the other case the unit clause with the negation of the literal\footnote{The unit clause which contains the negation of the \\ literal $l$ is $\lnot l$} is added (line 15).
+The last step of the DPLLRecursive is to call itself twice with new input. In one case a new unit clause with the selected literal $l$ is added to the formula (line 12), in the other case the unit clause with the negation of the literal, $\lnot l$, is added (line 15).
 
 The step where the first recursion ends in UNSAT and returns to the base is called backtracking. In the recursive version, this is very simple because there's literally nothing to be done. However in the iterative version, that is used in practice, backtracking can be very sophisticated.
 
@@ -134,7 +134,7 @@ As a first step, all clauses that contain the same literal (lines 8-9) have to b
 
 The second step is to remove all occurrences of the negated literal from all clauses (lines 10-11). This step is possible because the negated literal will always evaluate to false and an $\lor false$ combination is redundant.
 
-This reduction can result in new unit clauses, which then will be propagated until no more feasible clauses can be found or an empty clause is constructed\footnote{Remember when an empty clause $\Lambda$ is part of a CNF-Formula, the formula always evaluates to false.}.
+This reduction can result in new unit clauses, which then will be propagated until no more feasible clauses can be found or an empty clause $\Lambda$, which leads to an unfeasible formula, is constructed.
 
 \begin{figure}[H]
 \includegraphics[width=\columnwidth]{unitpropagate}
