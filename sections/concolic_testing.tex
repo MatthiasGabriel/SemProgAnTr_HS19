@@ -240,7 +240,7 @@ object 3: text: ....
 One major benefit of using the symbolic arguments in comparison to the symbolic variables is that it's possible to replay the test cases on any executable.
 This allows it to compile an independent executable from the source code and measure the code coverage without a direct dependency on the KLEE engine.
 
-With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. As an example the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in code snippet \ref{codeSnippet:test_query_one}
+With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. As an example the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in code snippet \ref{codeSnippet:test_query_one}.
 
 \begin{codesnippet}[caption={The query sent to STP when evaluation $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:test_query_one}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
@@ -252,7 +252,7 @@ QUERY(((((0x00 = a0[0x00000000]) AND
          (0x00 = a0[0x00000003])));
 \end{codesnippet}
 
-To provide another example, assume that the code is changed an instead of the simple assertion $a!=0$ to as followed $assert(a<b || a > 3)$. The resulting query is shown in code snippet \ref{codeSnippet:test_query_two}
+To provide another example, assume that the code is changed an instead of the simple assertion $a!=0$ to as followed $assert(a<b || a > 3)$. The resulting query is shown in code snippet \ref{codeSnippet:test_query_two}.
 
 \begin{codesnippet}[caption={The query sent to STP when evaluation $assert(a<b || a > 3)$}, label={codeSnippet:test_query_two}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
