@@ -129,12 +129,14 @@ At default settings, KLEE's file system model does not produce environmental fai
 
 If for an external function no model is provided, KLEE will concretize the symbolic call arguments. If this happens, the analysis of the program will not be complete, even if KLEE finishes.
 \subsubsection{Test cases}
-Whenever a state reaches the end of the program or an error is detected, KLEE generates a test case. This is done by querying STP for a concrete assignment for all symbolic values under the current path condition. If the program is deterministic the execution of the original program with these concrete values will behave exactly as the symbolic execution with this path condition.
-Note that depending on the execution mode of KLEE it is no longer required to compile the program to LLVM because KLEE will automatically execute the compiled binary with the appropriate values. This has additional benefits, such as it's easy to measure coverage by using standard tooling such as gcov, or that it is easy to prove that a certain input triggers an error. To prove this a special setup is no longer required, the program has just to be run with the appropriate values.
+Whenever a state reaches the end of the program or an error is detected, KLEE generates a test case. Two examples of such test cases are shown in code snippets \ref{codeSnippet:test_case_one} and \ref{codeSnippet:test_case_two}. This is done by querying STP for a concrete assignment for every symbolic value, considering the current path condition. If the program is deterministic the execution of the original program with these concrete values will behave exactly as the symbolic execution with this path condition.
+Note that depending on the execution mode of KLEE, it is no longer required to compile the program to LLVM because KLEE will automatically execute the compiled binary with the appropriate values. This has additional benefits, such as it's easy to measure coverage by using standard tooling such as gcov, or that it is easy to prove that a certain input triggers an error. To prove this, in most cases, a special setup is no longer required, the program has just to be run with the appropriate values.
 
-Executing test cases which use a symbolic model is not trivial, because the environment has to be set up to reflect the symbolic model. Before executing the program KLEE creates the required files, directories, etc and calls the program with the new concrete file locations. Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and does not execute the system call at all.
+However, depending on the model used for symbolic input, the execution of these test cases is not that trivial. For example if symbolic files are used, before executing the program, KLEE creates the required files and calls the program with the new concrete file locations. 
+Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and does not execute the system call at all.
+
 \subsubsection{Execution of KLEE}
-There exist two different modes of how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber which is defined in code snippet \ref{codeSnippet:symbolicExecution} should be tested.
+There are two different modes of how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber, which is defined in code snippet \ref{codeSnippet:symbolicExecution}, should be tested.
 
 The first approach is to write a custom main function in which two symbolic variables are defined and call the function with these variables as shown in code snippet \ref{codeSnippet:klee_inline}.
 \begin{codesnippet}[caption={Main function which defines two symbolic variables and calls the function calculateMagicNumber of code snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_inline}]
@@ -147,11 +149,11 @@ int main() {
 }
 \end{codesnippet}
 
-After the compilation to LLVM with the command \textit{clang -I ../include -c -g -emit-llvm magicnumber\_symbolic.c}, KLEE can be started on the newly generated file with the command \textit{klee --only-output-states-covering-new magicnumber\_symbolic.bc}.
+After the compilation to LLVM with the command \textit{clang -I ../include -c -g -emit-llvm magicnumber\_symbolic.c}, KLEE can be started on the newly generated file with the command \textit{klee -{}-only-output-states-covering-new magicnumber\_symbolic.bc}.
 
 With these settings, KLEE will automatically generate 5 different tests and detect one error. 
-The test case which triggered the error contains the concrete values of $a$ and $b$ which trigger the error and can be viewed with the command \textit{ktest-tool klee-last/test<test\_number>.ktest}.
-The output is display in code snippet \ref{codeSnippet:test_case_one}.
+The test case which triggered the error contains the concrete values of $a$ and $b$ which trigger the error and can be viewed with the command \textit{ktest-tool klee-last/test \textless test\_number\textgreater.ktest}.
+The output is displayed in code snippet \ref{codeSnippet:test_case_one}.
 
 \begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code snippet \ref{codeSnippet:klee_inline}}, label={codeSnippet:test_case_one}]
 ktest file : 'klee-last/test000001.ktest'
@@ -196,7 +198,7 @@ int main(int argc, char **argv) {
 
 The compilation is nearly the same as before \textit{clang -c -g -emit-llvm magicnumber\_args.c} but the additional include of KLEE can be omitted because no klee\_make\_symbolic is no longer used.
 
-KLEE gets called a bit differently: \textit{klee -posix-runtime -libc=uclibc --only-output-states-covering-new magicnumber\_args.bc -sym-args 1 3 4}.
+KLEE gets called a bit differently: \textit{klee -posix-runtime -libc=uclibc -{}-only-output-states-covering-new magicnumber\_args.bc -sym-args 1 3 4}.
 The additional option \textit{-posix-runtime} is required when using symbolic arguments, the parameter \textit{-libc=uclibc} replaces the default libc with the prepacked libc of KLEE, which allows the \textit{atoi} function to work with symbolic values.
 With the parameter \textit{-sym-args 1 3 4} KLEE knows how many symbolic values of which maximum length it needs to generate. In our case, KLEE tries different combinations of one to three arguments with a maximum length of four characters.
 When executed with these settings KLEE detects the error too. However, due to the additional complexity of the external function \textit{atoi} the execution of KLEE covers much more paths and generates around 15 tests. The execution therefore takes much longer.
@@ -237,6 +239,35 @@ object 3: text: ....
 
 One major benefit of using the symbolic arguments in comparison to the symbolic variables is that it's possible to replay the test cases on any executable.
 This allows it to compile an independent executable from the source code and measure the code coverage without a direct dependency on the KLEE engine.
+
+With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. As an example the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in code snippet \ref{codeSnippet:test_query_one}
+
+\begin{codesnippet}[caption={The query sent to STP when evaluation $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:test_query_one}]
+a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+%------------------------------------------
+QUERY(((((0x00 = a0[0x00000000]) AND
+         (0x00 = a0[0x00000001])) AND
+         (0x00 = a0[0x00000002])) AND
+         (0x00 = a0[0x00000003])));
+\end{codesnippet}
+
+To provide another example, assume that the code is changed an instead of the simple assertion $a!=0$ to as followed $assert(a<b || a > 3)$. The resulting query is shown in code snippet \ref{codeSnippet:test_query_two}
+
+\begin{codesnippet}[caption={The query sent to STP when evaluation $assert(a<b || a > 3)$}, label={codeSnippet:test_query_two}]
+a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+%------------------------------------------
+QUERY((LET let_k_0 = ( BVUMINUS( 
+  (a0[0x00000003] @ (a0[0x00000002] @
+  (a0[0x00000001] @ a0[0x00000000]))))) IN
+(SBVGT(
+  (b1[0x00000003] @ (b1[0x00000002] @
+  (b1[0x00000001] @ b1[0x00000000])))
+  ,let_k_0) 
+OR SBVGT(let_k_0,0x00000003))));
+\end{codesnippet}
+
 
 \subsubsection{Software Equivalence}\label{section:software_equivalence}
 In addition to testing a program, KLEE can also be used to reason about the equivalence of two implementations. Assume two functions $f(x)$ and $f'(x)$ which should be equivalent. With a simple assert statement $assert(f(x) == f'(x))$ where $x$ is a symbolic input, KLEE will execute try to find an assignment such that $f(x) != f'(x)$.
