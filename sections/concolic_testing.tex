@@ -122,20 +122,22 @@ In all this KLEE does nothing different than specified in the previous chapter \
 Another problem of symbolic execution is the dependency on the environment as discussed in chapter \ref{section:symbolic_restrictions}. KLEE tries to loosen the limitations by introducing so-called Environment Modeling. The idea behind these models is that they substitute the real environment against one that is aware of the symbolic input values. 
 This model needs to be able to accept a symbolic value and produce every possible value from it. Additionally, it needs to be aware of the previous modification that the program made on this model, but it's important that the modifications only affect the model in subsequent states. 
 
-During the execution of KLEE, these models will be injected based on the call that was made to the environment. These models are non-trivial to write and require deep knowledge of the original function as they need to behave like it. KLEE already includes a complete model for a symbolic file system and many different system-calls like open, read, write, that operate on this model.
+During the execution of KLEE, these models will be injected based on the call that was made to the environment. These models are non-trivial to write and require deep knowledge of the original function as they need to behave similar. KLEE already includes a complete model for a symbolic file system and many different system-calls like open, read, write, that operate on this model.
 The filesystem model optimises concrete calls by dispatching it to the original function on the real file system if the call contains only concrete arguments. Only when a symbolic value is passed as an argument the related model will be called. It's required to specify the number and size of symbolic files separately when starting a KLEE-analysis so that KLEE is able to allocate the files in the model and point the corresponding variable to the correct file.
 
 At default settings, KLEE's file system model does not produce environmental failures such as disk full. However, it's possible to simulate such failures, based on the requirements for the program. By offering such an option it's in the hands of the user to choose either more completeness or less computational effort. The same method can be applied to any model by only handling the cases which the user of KLEE wants to check. However, he should always remember that by simplifying the model some of the completeness of the analysis vanishes.
+
+If for an external function no model is provided, KLEE will concretize the symbolic call arguments. If this happens, the analysis of the program will not be complete, even if KLEE finishes.
 \subsubsection{Test cases}
 Whenever a state reaches the end of the program or an error is detected, KLEE generates a test case. This is done by querying STP for a concrete assignment for all symbolic values under the current path condition. If the program is deterministic the execution of the original program with these concrete values will behave exactly as the symbolic execution with this path condition.
 Note that depending on the execution mode of KLEE it is no longer required to compile the program to LLVM because KLEE will automatically execute the compiled binary with the appropriate values. This has additional benefits, such as it's easy to measure coverage by using standard tooling such as gcov, or that it is easy to prove that a certain input triggers an error. To prove this a special setup is no longer required, the program has just to be run with the appropriate values.
 
 Executing test cases which use a symbolic model is not trivial, because the environment has to be set up to reflect the symbolic model. Before executing the program KLEE creates the required files, directories, etc and calls the program with the new concrete file locations. Because it is not possible to reproduce an environmental failure, KLEE simulates this case whenever it is required. It uses a debugging tool to return the required error state and does not execute the system call at all.
 \subsubsection{Execution of KLEE}
-There exist two different modes of how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber which is defined in code-snippet \ref{codeSnippet:symbolicExecution} should be tested.
+There exist two different modes of how to analyse your program with the help of KLEE. Assume that the function calculateMagicNumber which is defined in code snippet \ref{codeSnippet:symbolicExecution} should be tested.
 
-The first approach is to write a custom main function in which two symbolic variables are defined and call the function with these variables as shown in code-snippet \ref{codeSnippet:klee_inline}.
-\begin{codesnippet}[caption={Main function which defines two symbolic variables and calls the function calculateMagicNumber of code-snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_inline}]
+The first approach is to write a custom main function in which two symbolic variables are defined and call the function with these variables as shown in code snippet \ref{codeSnippet:klee_inline}.
+\begin{codesnippet}[caption={Main function which defines two symbolic variables and calls the function calculateMagicNumber of code snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_inline}]
 int main() {
   int a;
   klee_make_symbolic(&a, sizeof(a), "a");
@@ -149,9 +151,9 @@ After the compilation to LLVM with the command \textit{clang -I ../include -c -g
 
 With these settings, KLEE will automatically generate 5 different tests and detect one error. 
 The test case which triggered the error contains the concrete values of $a$ and $b$ which trigger the error and can be viewed with the command \textit{ktest-tool klee-last/test<test\_number>.ktest}.
-The output is display in code-snippet \ref{codeSnippet:test_case_one}.
+The output is display in code snippet \ref{codeSnippet:test_case_one}.
 
-\begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code-snippet \ref{codeSnippet:klee_inline}}, label={codeSnippet:test_case_one}]
+\begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code snippet \ref{codeSnippet:klee_inline}}, label={codeSnippet:test_case_one}]
 ktest file : 'klee-last/test000001.ktest'
 args       : ['magicnumber_symbolic.bc']
 num objects: 3
@@ -178,10 +180,10 @@ object 2: uint: 0
 object 2: text: ....
 \end{codesnippet}
 
-The second approach is to use a main function which takes the arguments from the command line and calls the function with the parsed input as shown in code-snippet \ref{codeSnippet:klee_arguments}.
+The second approach is to use a main function which takes the arguments from the command line and calls the function with the parsed input as shown in code snippet \ref{codeSnippet:klee_arguments}.
 In this approach, it's no longer required to define in the program code which arguments should be treated as symbolic values. Additionally, the code has no longer a dependency on the program code of KLEE.
 
-\begin{codesnippet}[caption={Main function which parses two input arguments and calls the function calculateMagicNumber of code-snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_arguments}]
+\begin{codesnippet}[caption={Main function which parses two input arguments and calls the function calculateMagicNumber of code snippet \ref{codeSnippet:symbolicExecution}}, label={codeSnippet:klee_arguments}]
 int main(int argc, char **argv) {
   if(argc != 3){
 	return -1;
@@ -202,7 +204,7 @@ When executed with these settings KLEE detects the error too. However, due to th
 The comparison of the two test cases shows that the inputs that triggered the error are not equal.
 Because it's not possible to restrict the input variables to integers the generated concrete values are char-arrays, which in the program code will be converted into integers.
 
-\begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code-snippet \ref{codeSnippet:klee_arguments}}, label={codeSnippet:test_case_two}]
+\begin{codesnippet}[caption={The test case generated by KLEE which triggers the assertion error when executing it on the code snippet \ref{codeSnippet:klee_arguments}}, label={codeSnippet:test_case_two}]
 ktest file : 'klee-last/test000006.ktest'
 args       : ['magicnumber_args.bc',
               '-sym-args', '1', '3', '4']
