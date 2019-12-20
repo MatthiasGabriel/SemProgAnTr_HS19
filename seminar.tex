@@ -50,6 +50,24 @@
     }
 }
 {}
+%%%%%% OWN Listings
+\lstnewenvironment{customlisting}[1][]
+{   
+\renewcommand{\lstlistingname}{Listing}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
 
 
 \usepackage{tikz}
