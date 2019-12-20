@@ -243,7 +243,7 @@ This allows it to compile an independent executable from the source code and mea
 With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. These queries are expressed in the CVC Input Language.
 As an example, the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in listing \ref{listing:test_query_one}.
 
-\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution} in state J of figure  \ref{fig:sym_example_one}}, label={listing:test_query_one}]
+\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution} in state J of figure  \ref{fig:sym_example_one}.}, label={listing:test_query_one}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 %------------------------------------------
@@ -266,7 +266,7 @@ To provide a slightly complexer example, let's assume that the code is changed a
 The resulting query is shown in listing \ref{listing:test_query_two}. 
 Note that the version listed here has taken the following execution path 2 -\textgreater \text{ }3 -\textgreater \text{ }11 -\textgreater \text{ }13 and represents the state L of figure \ref{fig:sym_example_one}. 
 
-\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a<b || a > 3)$ in state L of Figure \ref{fig:sym_example_one}}, label={listing:test_query_two}]
+\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a<b || a > 3)$ in state L of Figure \ref{fig:sym_example_one}.}, label={listing:test_query_two}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 %------------------------------------------
@@ -286,9 +286,6 @@ OR SBVGT(let_k_0,0x00000003))));
 
 Again both known variables are declared at the start, but afterwards, a new variable $let\_k\_0$ is specified and initialised with the negative value of $a0$ by the operation "Bitvector Unary Minus" (BVUMINUS). This directly represents line 11 where $a$ gets assigned the new value $a*-1$.
 After that, it's checked if either $b$ is greater than $let\_k\_0$ or $let\_k\_0$ is greater than $3$ with the binary predicate "Signed Greater Than" (SBVGT).
-
-
-
 
 \subsubsection{Software Equivalence}\label{section:software_equivalence}
 In addition to testing a program, KLEE can also be used to reason about the equivalence of two implementations. Assume two functions $f(x)$ and $f'(x)$ which should be equivalent. With a simple assert statement $assert(f(x) == f'(x))$ where $x$ is a symbolic input, KLEE will execute try to find an assignment such that $f(x) != f'(x)$.
