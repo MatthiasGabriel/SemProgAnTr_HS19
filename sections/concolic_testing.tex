@@ -138,7 +138,7 @@ Because it is not possible to reproduce an environmental failure, KLEE simulates
 \subsubsection{Execution of KLEE}
 There are two different modes of how to analyse your program with the help of KLEE. Let's assume that the function calculateMagicNumber, which is defined in code snippet \ref{codeSnippet:symbolicExecution}, should be tested.
 
-The first approach is to write a custom main function in which two symbolic variables are defined and call the function with these variables as shown in code snippet \ref{codeSnippet:klee_inline}.
+The first approach is to write a custom main function where two symbolic variables are defined and which calls the function with these variables as shown in code snippet \ref{codeSnippet:klee_inline}.
 \begin{codesnippet}[caption={Main function which defines two symbolic variables and calls the function calculateMagicNumber of code snippet \ref{codeSnippet:symbolicExecution}.}, label={codeSnippet:klee_inline}]
 int main() {
   int a;
@@ -196,7 +196,7 @@ int main(int argc, char **argv) {
 }
 \end{codesnippet}
 
-The compilation is nearly the same as before \textit{clang -c -g -emit-llvm magicnumber\_args.c} but the additional include of KLEE can be omitted because no klee\_make\_symbolic is no longer used.
+The compilation is nearly the same as before \textit{clang -c -g -emit-llvm magicnumber\_args.c} but the additional include of KLEE can be omitted because klee\_make\_symbolic is no longer used.
 
 KLEE gets called a bit differently: \textit{klee -posix-runtime -libc=uclibc -{}-only-output-states-covering-new magicnumber\_args.bc -sym-args 1 3 4}.
 The additional option \textit{-posix-runtime} is required when using symbolic arguments, the parameter \textit{-libc=uclibc} replaces the default libc with the prepacked libc of KLEE, which allows the \textit{atoi} function to work with symbolic values.
@@ -243,11 +243,6 @@ This allows it to compile an independent executable from the source code and mea
 With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. These queries are expressed in the CVC Input Language.
 As an example, the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in listing \ref{listing:test_query_one}.
 
-In the first section, the two known variables are declared as array bitvector of bitvectors. 
-In the second section, the required conditions are declared.
-The third section, which contains the query itself is very simple, as each extraction of the $a0$ bitvector is directly compared with the fixed value $0x00$ without any further restrictions.
-STP will be able to find values for $a0$ and $b1$ such that the query criteria are fully matched. Therefore it's proven that the assertion can be triggered by an input and a KLEE test case is created containing the concrete variable assignments returned by STP.
-
 \begin{customlisting}[caption={The query sent to STP when evaluating $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution} in state J of figure  \ref{fig:sym_example_one}}, label={listing:test_query_one}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
@@ -262,12 +257,14 @@ QUERY(((((0x00 = a0[0x00000000]) AND
          (0x00 = a0[0x00000003])));
 \end{customlisting}
 
-To provide a slightly complexer example, let's assume that the code is changed and instead of the simple assertion $assert(a!=0)$ the following assertion $assert(a<b || a > 3)$ gets evaluated in code snippet \ref{codeSnippet:symbolicExecution}. 
-Note that the version listed here has taken the following execution path 2 -\textgreater \text{ }3 -\textgreater \text{ }11 -\textgreater \text{ }13 and represents the state L of figure \ref{fig:sym_example_one}. 
-The resulting query is shown in listing \ref{listing:test_query_two}. 
+In the first section, the two known variables are declared as array bitvector of bitvectors. 
+In the second section, the required conditions are declared.
+The third section, which contains the query itself is very simple, as each extraction of the $a0$ bitvector is directly compared with the fixed value $0x00$ without any further restrictions.
+STP will be able to find values for $a0$ and $b1$ such that the query criteria are fully matched. Therefore it's proven that the assertion can be triggered by an input and a KLEE test case is created containing the concrete variable assignments returned by STP.
 
-Again both known variables are declared at the start, but afterwards, a new variable $let\_k\_0$ is specified and initialised with the negative value of $a0$ by the operation "Bitvector Unary Minus" (BVUMINUS). This directly represents line 11 where $a$ gets assigned the new value $a*-1$.
-After that, it's checked if either $b$ is greater than $let\_k\_0$ or $let\_k\_0$ is greater than $3$ with the binary predicate "Signed Greater Than" (SBVGT).
+To provide a slightly complexer example, let's assume that the code is changed and instead of the simple assertion $assert(a!=0)$ the following assertion $assert(a<b || a > 3)$ gets evaluated in code snippet \ref{codeSnippet:symbolicExecution}. 
+The resulting query is shown in listing \ref{listing:test_query_two}. 
+Note that the version listed here has taken the following execution path 2 -\textgreater \text{ }3 -\textgreater \text{ }11 -\textgreater \text{ }13 and represents the state L of figure \ref{fig:sym_example_one}. 
 
 \begin{customlisting}[caption={The query sent to STP when evaluating $assert(a<b || a > 3)$ in state L of Figure \ref{fig:sym_example_one}}, label={listing:test_query_two}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
@@ -286,6 +283,11 @@ QUERY((LET let_k_0 = ( BVUMINUS(
   ,let_k_0) 
 OR SBVGT(let_k_0,0x00000003))));
 \end{customlisting}
+
+Again both known variables are declared at the start, but afterwards, a new variable $let\_k\_0$ is specified and initialised with the negative value of $a0$ by the operation "Bitvector Unary Minus" (BVUMINUS). This directly represents line 11 where $a$ gets assigned the new value $a*-1$.
+After that, it's checked if either $b$ is greater than $let\_k\_0$ or $let\_k\_0$ is greater than $3$ with the binary predicate "Signed Greater Than" (SBVGT).
+
+
 
 
 \subsubsection{Software Equivalence}\label{section:software_equivalence}
