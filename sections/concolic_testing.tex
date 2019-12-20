@@ -240,11 +240,21 @@ object 3: text: ....
 One major benefit of using the symbolic arguments in comparison to the symbolic variables is that it's possible to replay the test cases on any executable.
 This allows it to compile an independent executable from the source code and measure the code coverage without a direct dependency on the KLEE engine.
 
-With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. As an example the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in listing \ref{listing:test_query_one}.
+With the addition of the additional argument \textit{-debug-dump-stp-queries} to the call of KLEE, all STP queries that are executed are printed to the console. These queries are expressed in the CVC Input Language.
+As an example the query, that checks if the assertion on line 13 of code snippet \ref{codeSnippet:symbolicExecution} is always fulfilled, is shown in listing \ref{listing:test_query_one}.
 
-\begin{customlisting}[caption={The query sent to STP when evaluation $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution}}, label={listing:test_query_one}]
+In the first section the two known variables are declared as array bitvector of bitvectors. 
+In the second section the required conditions are declared.
+The third section which contains the query itself is very simple, as each extraction of the $a0$ bitvector is directly compared with a the fixed value $0x00$ without any further restrictions.
+STP will be able to find values for $a0$ and $b1$ such that the query criteria are fully matched. Therefore it's proven that the assertion can be triggered by an input and a KLEE test case is created containing the concrete variable assignments returned by STP.
+
+\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a!=0)$ from code snippet \ref{codeSnippet:symbolicExecution} in state J of figure  \ref{fig:sym_example_one}}, label={listing:test_query_one}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+%------------------------------------------
+ASSERT( ( NOT( SBVGT(0x00000000,
+  (a0[0x00000003] @ (a0[0x00000002] @
+  (a0[0x00000001] @ a0[0x00000000])))))));
 %------------------------------------------
 QUERY(((((0x00 = a0[0x00000000]) AND
          (0x00 = a0[0x00000001])) AND
@@ -252,11 +262,20 @@ QUERY(((((0x00 = a0[0x00000000]) AND
          (0x00 = a0[0x00000003])));
 \end{customlisting}
 
-To provide another example, assume that the code is changed an instead of the simple assertion $a!=0$ to as followed $assert(a<b || a > 3)$. The resulting query is shown in listing \ref{listing:test_query_two}.
+To provide a slightly complexer example, assume that the code is changed and instead of the simple assertion $assert(a!=0)$ the following assertion $assert(a<b || a > 3)$ gets evaluated in code snippet \ref{codeSnippet:symbolicExecution}. 
+Note that the version listed here has taken the following execution path 2 -\textgreater \text{ }3 -\textgreater \text{ }11 -\textgreater \text{ }13 and represents the state L of figure \ref{fig:sym_example_one}. 
+The resulting query is shown in listing \ref{listing:test_query_two}. 
 
-\begin{customlisting}[caption={The query sent to STP when evaluation $assert(a<b || a > 3)$}, label={listing:test_query_two}]
+Again both known variables are declared at the start, but afterwards a new variable $let\_k\_0$ is specified and initialised with the negative value of $a0$ by the operation "Bitvector Unary Minus" (BVUMINUS). This directly represents line 11 where $a$ gets assigned the new value $a*-1$.
+After that it's checked if either $b$ is greater than $let\_k\_0$ or $let\_k\_0$ is greater than $3$ with the binary predicate "Signed Greater Than" (SBVGT).
+
+\begin{customlisting}[caption={The query sent to STP when evaluating $assert(a<b || a > 3)$ in state L of Figure \ref{fig:sym_example_one}}, label={listing:test_query_two}]
 a0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 b1  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+%------------------------------------------
+ASSERT( SBVGT(0x00000000,
+  (a0[0x00000003] @ (a0[0x00000002] @ 
+  (a0[0x00000001] @ a0[0x00000000])))));
 %------------------------------------------
 QUERY((LET let_k_0 = ( BVUMINUS( 
   (a0[0x00000003] @ (a0[0x00000002] @
