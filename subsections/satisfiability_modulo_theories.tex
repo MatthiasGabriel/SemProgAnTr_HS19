@@ -1,6 +1,5 @@
 \subsection{Satisfiability Modulo Theories Solvers}
 In relation to the Satisfiability Solvers, the Satisfiability Modulo Theories solvers, short SMT solvers, operate on a higher logical level. Because it is often time-consuming to formulate your domain-specific problem as a boolean formula and transform it into CNF a new class of solvers was defined that try to overcome this restriction. In this section, an overview of STP \cite{Ganesh:2007:DPB:1770351.1770421}, which is used in KLEE and other tools, is given.
-\todo{maybe add/research something more about first order theories}
 In contrast to SAT solvers, STP is able to solve decision problems that contain bit-vectors and arrays. In practice this allows us to reason about various data types such as integers but also certain data structures like lists and arrays.
 
 As an input STP allows the following operations, which can be grouped in the following way:
@@ -17,9 +16,6 @@ STP was specifically developed with a focus on software analysis projects becaus
 \label{fig:STP_architecture}
 \end{figure}
 
-\todo{add some more content about the "architecture" / flow of STP}
-\todo{add more content about the general working of STP, especially the array refinement}
-
 To reduce the size of a problem it applies optimations specific to bit-vector and array theory.
 
 In the original paper \cite{Ganesh:2007:DPB:1770351.1770421} there are two of these optimizations discussed. The first optimization is an "on-the-fly solver for mod-$2^n$ linear arithmetic" which is embedded in STP. 
@@ -32,7 +28,6 @@ $$\sum_{i=1}^{n} a_ix_i = c_i  \Mod{2^b}$$
 $$gcd(a_1,...,a_n,2^b) | c_i$$
 The equation is only solvable if the greatest common divisor, also known as gcd, is a divisor of every $c_i$.\
 Let's assume the following equality system\footnote{The example is originally from \cite{Ganesh:2007:DPB:1770351.1770421}.} where all variables are bit-vectors with length 3, $b$ is therefore 3:
-\todo{replace system with own example}
 $$3x+4y+2z=0 \Mod{2^3}$$
 $$2x+2y+2=0  \Mod{2^3}$$
 $$2x+4y+2z=0 \Mod{2^3}$$
